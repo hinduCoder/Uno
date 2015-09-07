@@ -1,0 +1,49 @@
+﻿@using System.Web.Optimization
+@{
+    Layout = null;
+    var gameSession = Model;
+
+    var player = ViewBag.Player;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Uno</title>
+    @Styles.Render("~/Styles/Index.less")
+    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
+    @Scripts.Render("/signalr/hubs")
+    @Scripts.Render("~/Scripts/Game.js")
+</head>
+<body>
+
+    <div>Current Player: @gameSession.CurrentPlayer.Name</div>
+
+    <div class="cards">
+        
+        @for (var i = 0; i < player.Cards.Count; i++)
+        {
+            var card = player.Cards[i];
+            if (gameSession.CurrentPlayer == player)
+            {
+                <button class="card">@card.ToString()</button>
+            }
+            else
+            {
+                <button class="card" disabled="disabled">@card.ToString()</button>
+            }
+        }
+    </div>
+
+    <div class="top-card">
+        @gameSession.Game.DiscardPileTop.ToString()
+    </div>
+    <button class="btn-draw">
+        Draw
+</button> 
+    <button class="btn-pass" disabled="disabled">
+        Pass
+    </button>
+</body>
+</html>

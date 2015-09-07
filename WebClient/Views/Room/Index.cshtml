@@ -1,0 +1,45 @@
+﻿@using System.Web.Optimization
+@model global::WebClient.Controllers.JoinRoomFormViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
+    <script src="/signalr/hubs"></script>
+    @Scripts.Render("~/Scripts/Room.js")
+</head>
+<body>
+    @{
+        var rooms = ViewBag.RoomContainer.Rooms;
+    }
+    @for (int i = 0; i < rooms.Count; i++)
+    {
+        var room = rooms[i];
+        <div style="border: 1px solid black; width: 200px; padding: 5px;">
+            <div class="players">
+                @foreach (var player in room.Players)
+                {
+                    <p>@player.Name</p>
+                }
+
+            </div>
+            @if (ViewBag.CanJoin)
+            {
+                <button class="btn-join">Join</button>
+            }
+            @using (Html.BeginForm("Start", "Room", FormMethod.Get))
+            {
+                @Html.Hidden("id", i)
+                <input type="submit" value="Start" class="btn-start" style="display: @(room.CanStart ? "block" : "none")"/>
+            }
+        </div>
+    }
+</body>
+</html>

@@ -1,0 +1,25 @@
+﻿@using System.Web.Optimization
+@model global::WebClient.Controllers.RegisterViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+
+</head>
+<body>
+<div>
+    @using (@Html.BeginForm("Register", "Home", FormMethod.Post))
+    {
+        @Html.TextBoxFor(rvm => rvm.Name)
+        <input type="submit"/>
+    }
+</div>
+</body>
+</html>
