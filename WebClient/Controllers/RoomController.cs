@@ -18,7 +18,7 @@ namespace WebClient.Controllers
         // GET: Room
         public ActionResult Index()
         {
-            if (Request.Cookies["name"] == null)
+            if (Request.Cookies["userid"] == null)
                 return Redirect("/");
             ViewBag.RoomContainer = Lobby.Instance;
             ViewBag.CanJoin = !Lobby.Instance.Rooms.Any(r => r.Players.Any(p => p.Name == Request.Cookies["name"]?.Value));

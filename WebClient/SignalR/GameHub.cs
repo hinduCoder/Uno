@@ -20,7 +20,7 @@ namespace WebClient.SignalR
             Lobby.Instance.Rooms[id].Players.Single(p => p.Name == Context.RequestCookies["name"].Value).ConnectionId =
                 Context.ConnectionId;
             Groups.Add(Context.ConnectionId, id.ToString());
-            Asp
+            
         }
 
         public void Move(int index)

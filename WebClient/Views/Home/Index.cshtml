@@ -1,5 +1,5 @@
 ﻿@using System.Web.Optimization
-@model global::WebClient.Controllers.RegisterViewModel
+@model global::WebClient.Controllers.LoginViewModel
 @{
     Layout = null;
 }
@@ -15,10 +15,11 @@
 </head>
 <body>
 <div>
-    @using (@Html.BeginForm("Register", "Home", FormMethod.Post))
+    @using (@Html.BeginForm("LogIn", "Home", FormMethod.Post))
     {
-        @Html.TextBoxFor(rvm => rvm.Name)
-        <input type="submit"/>
+        @Html.TextBoxFor(lvm => lvm.Username)
+        @Html.PasswordFor(lvm => lvm.Password)
+        <input type="submit" value="Log in"/>
     }
 </div>
 </body>

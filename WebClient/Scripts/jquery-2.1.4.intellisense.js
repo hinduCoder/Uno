@@ -67,7 +67,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Returns value at named data store for the element, as set by jQuery.data(element, name, value), or the full data store for the element.</summary>
     ///   <param name="element" type="Element">The DOM element to query for the data.</param>
-    ///   <param name="key" type="String">Name of the data stored.</param>
+    ///   <param name="key" type="String">Username of the data stored.</param>
     ///   <returns type="Object" />
     /// </signature>
     /// <signature>
@@ -78,7 +78,7 @@ intellisense.annotate(jQuery, {
   },
   'Deferred': function() {
     /// <signature>
-    ///   <summary>A constructor function that returns a chainable utility object with methods to register multiple callbacks into callback queues, invoke callback queues, and relay the success or failure state of any synchronous or asynchronous function.</summary>
+    ///   <summary>A constructor function that returns a chainable utility object with methods to login multiple callbacks into callback queues, invoke callback queues, and relay the success or failure state of any synchronous or asynchronous function.</summary>
     ///   <param name="beforeStart" type="Function">A function that is called just before the constructor returns.</param>
     ///   <returns type="Deferred" />
     /// </signature>
@@ -771,14 +771,14 @@ intellisense.annotate(jQuery.fn, {
   },
   'ajaxComplete': function() {
     /// <signature>
-    ///   <summary>Register a handler to be called when Ajax requests complete. This is an AjaxEvent.</summary>
+    ///   <summary>LogIn a handler to be called when Ajax requests complete. This is an AjaxEvent.</summary>
     ///   <param name="handler(event, XMLHttpRequest, ajaxOptions)" type="Function">The function to be invoked.</param>
     ///   <returns type="jQuery" />
     /// </signature>
   },
   'ajaxError': function() {
     /// <signature>
-    ///   <summary>Register a handler to be called when Ajax requests complete with an error. This is an Ajax Event.</summary>
+    ///   <summary>LogIn a handler to be called when Ajax requests complete with an error. This is an Ajax Event.</summary>
     ///   <param name="handler(event, jqXHR, ajaxSettings, thrownError)" type="Function">The function to be invoked.</param>
     ///   <returns type="jQuery" />
     /// </signature>
@@ -792,14 +792,14 @@ intellisense.annotate(jQuery.fn, {
   },
   'ajaxStart': function() {
     /// <signature>
-    ///   <summary>Register a handler to be called when the first Ajax request begins. This is an Ajax Event.</summary>
+    ///   <summary>LogIn a handler to be called when the first Ajax request begins. This is an Ajax Event.</summary>
     ///   <param name="handler()" type="Function">The function to be invoked.</param>
     ///   <returns type="jQuery" />
     /// </signature>
   },
   'ajaxStop': function() {
     /// <signature>
-    ///   <summary>Register a handler to be called when all Ajax requests have completed. This is an Ajax Event.</summary>
+    ///   <summary>LogIn a handler to be called when all Ajax requests have completed. This is an Ajax Event.</summary>
     ///   <param name="handler()" type="Function">The function to be invoked.</param>
     ///   <returns type="jQuery" />
     /// </signature>

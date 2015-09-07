@@ -9,6 +9,7 @@ using System.Web.Optimization;
 using System.Web.Security;
 using Uno;
 using Uno.Model;
+using Uno = Uno.Model.Uno;
 
 namespace WebClient.Controllers
 {
@@ -17,32 +18,30 @@ namespace WebClient.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            var cookie = Request.Cookies["name"];
+            var cookie = Request.Cookies["userid"];
             if (cookie != null)
             {
-                Controllers.Game.AddPlayer(cookie.Value);
                 return Redirect("/Room");
             }
             return View();
+
         }
         [HttpPost]
-        public ActionResult Register(RegisterViewModel register)
+        public ActionResult LogIn(LoginViewModel login)
         {
-            Controllers.Game.AddPlayer(register.Name);
-            Response.SetCookie(new HttpCookie("name", register.Name) { Expires = DateTime.Now.AddMinutes(30) });
+            using (var unoDb = new UnoDb())
+            {
+                var user = unoDb.User.SingleOrDefault(u => u.Username == login.Username);
+
+                if (user == null)
+                    return HttpNotFound("No such user"); // TODO: TEMP
+                if (user.Password != login.Password)
+                    return HttpNotFound("Password wrong"); //TODO: hash
+
+                Response.SetCookie(new HttpCookie("userid", user.Id.ToString()) {Expires = DateTime.Now.AddMinutes(10)});
+            }
             return Redirect("/Room");
         }
-
-        //public ActionResult Game()
-        //{ 
-        //    ViewBag.Game = Controllers.Game.Session;
-        //    return View("Index1", Controllers.Game.Session?.Players.SingleOrDefault(p => p.Name == Request.Cookies["name"]?.Value));
-        //}
-
-        //public ActionResult Move(int? index)
-        //{
-        //    Controllers.Game.Session.Discard(index.Value);
-        //    return Redirect("/");
-        //}
+        
     }
 }
