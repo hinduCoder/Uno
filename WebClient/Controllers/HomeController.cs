@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Security;
+using PasswordHash;
 using Uno;
 using Uno.Model;
 using Uno = Uno.Model.Uno;
@@ -35,8 +38,9 @@ namespace WebClient.Controllers
 
                 if (user == null)
                     return HttpNotFound("No such user"); // TODO: TEMP
-                if (user.Password != login.Password)
-                    return HttpNotFound("Password wrong"); //TODO: hash
+                var hashedPasswordString = Encrypt.SHA1(login.Password);
+                if (!user.Password.Equals(hashedPasswordString, StringComparison.OrdinalIgnoreCase))
+                    return HttpNotFound("Password wrong");
 
                 Response.SetCookie(new HttpCookie("userid", user.Id.ToString()) {Expires = DateTime.Now.AddMinutes(10)});
             }
