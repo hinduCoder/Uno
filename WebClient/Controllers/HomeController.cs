@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Security;
 using PasswordHash;
-using Uno;
-using Uno.Model;
-using Uno = Uno.Model.Uno;
 
 namespace WebClient.Controllers
 {
@@ -22,7 +13,7 @@ namespace WebClient.Controllers
         public ActionResult Index()
         {
             var cookie = Request.Cookies["userid"];
-            if (cookie != null)
+            if (cookie != null && (!FormsAuthentication.Decrypt(cookie.Value)?.Expired ?? false))
             {
                 return Redirect("/Room");
             }
@@ -31,21 +22,41 @@ namespace WebClient.Controllers
         }
         [HttpPost]
         public ActionResult LogIn(LoginViewModel login)
-        {
+        { 
             using (var unoDb = new UnoDb())
             {
-                var user = unoDb.User.SingleOrDefault(u => u.Username == login.Username);
-
+                var user = unoDb.Users.SingleOrDefault(u => u.Username == login.Username);
                 if (user == null)
                     return HttpNotFound("No such user"); // TODO: TEMP
                 var hashedPasswordString = Encrypt.SHA1(login.Password);
                 if (!user.Password.Equals(hashedPasswordString, StringComparison.OrdinalIgnoreCase))
                     return HttpNotFound("Password wrong");
 
-                Response.SetCookie(new HttpCookie("userid", user.Id.ToString()) {Expires = DateTime.Now.AddMinutes(10)});
+                var ticket = new FormsAuthenticationTicket(login.Username, true, 30);
+                var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+                Response.SetCookie(new HttpCookie("userid", encryptedTicket) {Expires = DateTime.Now.AddMinutes(30)});
             }
             return Redirect("/Room");
         }
-        
+
+        public ActionResult Register()
+        {
+            return View("Register");
+        }
+        [HttpPost]
+        public ActionResult SignUp(RegisterViewModel register)
+        {
+            using (var unoDb = new UnoDb())
+            {
+                unoDb.Users.Add(new User
+                {
+                    Email = register.Email,
+                    Password = Encrypt.SHA1(register.Password),
+                    Username = register.Username
+                });
+                unoDb.SaveChanges();
+            }
+            return Redirect("/");
+        }
     }
 }

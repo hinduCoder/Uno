@@ -6,10 +6,11 @@ namespace WebClient
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("User")]
+    [Table("Users")]
     public partial class User
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -19,5 +20,9 @@ namespace WebClient
         [Required]
         [StringLength(200)]
         public string Password { get; set; }
+
+        [Required]
+        [StringLength(150)]
+        public string Email { get; set; }
     }
 }

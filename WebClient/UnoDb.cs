@@ -13,7 +13,7 @@ namespace WebClient
         }
 
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -24,6 +24,9 @@ namespace WebClient
             modelBuilder.Entity<User>()
                 .Property(e => e.Password)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@using System.Web.Optimization
-@model global::WebClient.Controllers.LoginViewModel
+@model global::WebClient.RegisterViewModel
 @{
     Layout = null;
 }
@@ -9,34 +9,35 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+    <title>Register</title>
     @Styles.Render("~/Content/bootstrap.min.css")
-    @Styles.Render("~/Content/bootstrap-theme.min.css")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
-
 </head>
 <body>
 <div>
-    @using (@Html.BeginForm("LogIn", "Home", FormMethod.Post))
+    @using (@Html.BeginForm("SignUp", "Home", FormMethod.Post))
     {
+        <div class="form-group">
+            <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+                @Html.TextBoxFor(rvm => rvm.Email, new {@class = "form-control", id = "inputEmail", type = "email"})
+            </div>
+        </div>
         <div class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">Login</label>
             <div class="col-sm-10">
-                @Html.TextBoxFor(lvm => lvm.Username, new { @class = "form-control", id = "inputUsername" })
+                @Html.TextBoxFor(rvm => rvm.Username, new { @class = "form-control", id = "inputUsername" })
             </div>
         </div>
         <div class="form-group">
             <label for="inputPassword" class="col-sm-2 control-label">Password</label>
             <div class="col-sm-10">
-                @Html.PasswordFor(lvm => lvm.Password, new {@class="form-control", id= "inputPassword" })
+                @Html.PasswordFor(rvm => rvm.Password, new { @class = "form-control", id = "inputPassword" })
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Sign in</button>
-                <a href="/Home/Register">Register</a>
+                <button type="submit" class="btn btn-default">Sign up</button>
             </div>
         </div>
     }
