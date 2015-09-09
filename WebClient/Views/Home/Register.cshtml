@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Register</title>
     @Styles.Render("~/Content/bootstrap.min.css")
+    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+    @Scripts.Render("~/Scripts/Register.js")
 </head>
 <body>
 <div>
@@ -37,7 +39,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Sign up</button>
+                <button type="submit" id="btn-singup" class="btn btn-default">Sign up</button>
             </div>
         </div>
     }

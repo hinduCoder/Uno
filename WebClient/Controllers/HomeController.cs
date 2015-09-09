@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
 using PasswordHash;
@@ -20,7 +22,7 @@ namespace WebClient.Controllers
             return View();
 
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult LogIn(LoginViewModel login)
         { 
             using (var unoDb = new UnoDb())
@@ -43,7 +45,7 @@ namespace WebClient.Controllers
         {
             return View("Register");
         }
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult SignUp(RegisterViewModel register)
         {
             using (var unoDb = new UnoDb())
@@ -57,6 +59,15 @@ namespace WebClient.Controllers
                 unoDb.SaveChanges();
             }
             return Redirect("/");
+        }
+        [System.Web.Mvc.HttpGet]
+        public ActionResult IsUsernameFree([FromUri] string username)
+        {
+            using (var unoDb = new UnoDb())
+            {
+                var all = unoDb.Users.All(u => u.Username != username);
+                return Json(new {response = all}, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
