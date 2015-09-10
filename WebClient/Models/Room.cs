@@ -13,6 +13,7 @@ namespace WebClient
         public void AddPlayer(Player player)
         {
             _players.Add(player);
+            player.Room = this;
             if (_players.Count == PlayerCount)
                 CanStart = true;
         }
@@ -20,6 +21,7 @@ namespace WebClient
         public void RemovePlayer(Player player)
         {
             _players.Remove(player);
+            player.Room = null;
             if (_players.Count < PlayerCount)
                 CanStart = false;
         }

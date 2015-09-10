@@ -2,7 +2,6 @@
 @{
     Layout = null;
     var gameSession = Model;
-
     var player = ViewBag.Player;
 }
 <!DOCTYPE html>
@@ -17,11 +16,7 @@
     @Scripts.Render("~/Scripts/Game.js")
 </head>
 <body>
-
-    <div>Current Player: @gameSession.CurrentPlayer.Name</div>
-
-    <div class="cards">
-        
+    <div class="cards">   
         @for (var i = 0; i < player.Cards.Count; i++)
         {
             var card = player.Cards[i];
@@ -39,11 +34,7 @@
     <div class="top-card">
         @gameSession.Game.DiscardPileTop.ToString()
     </div>
-    <button class="btn-draw">
-        Draw
-</button> 
-    <button class="btn-pass" disabled="disabled">
-        Pass
-    </button>
+    <button class="btn-draw">Draw</button> 
+    <button class="btn-pass" disabled="disabled">Pass</button>
 </body>
 </html>

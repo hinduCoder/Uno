@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Uno;
+using System.Web.Security;
 
 namespace WebClient.Controllers
 {
@@ -13,8 +9,15 @@ namespace WebClient.Controllers
         // GET: Game
         public ActionResult Index(int id)
         {
-            var gameSession = Lobby.Instance.Rooms[id].CreateGameSession();
-            ViewBag.Player = gameSession.Players.Single(p => p.Name == Request.Cookies["name"].Value);
+            var cookie = Request.Cookies["userid"];
+            if (cookie == null)
+                return null;
+            var userName = FormsAuthentication.Decrypt(cookie.Value).Name;
+            var lobby = Lobby.Instance;
+            var currentPlayer = lobby.GetPlayerByName(userName);
+            var room = currentPlayer.Room;
+            var gameSession = room.CreateGameSession();
+            ViewBag.Player = gameSession.Players.Single(p => p.Name == userName);
             return View(gameSession);
         }
     }

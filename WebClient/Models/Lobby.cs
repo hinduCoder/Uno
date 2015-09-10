@@ -36,5 +36,10 @@ namespace WebClient.Controllers
             AllPlayers.Remove(player);
             _rooms.ForEach(r => r.RemovePlayer(player));
         }
+
+        public Player GetPlayerByName(string name)
+        {
+            return AllPlayers.Single(p => p.Name == name);
+        }
     }
 }

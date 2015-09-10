@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Cache;
 using System.Threading.Tasks;
+using System.Web.Security;
 using dotless.Core.Parser.Infrastructure;
 using Microsoft.AspNet.SignalR;
 using WebClient.Controllers;
@@ -13,7 +14,7 @@ namespace WebClient.SignalR
         public void AddPlayerToRoom(int roomIndex)
         {
             var lobby = Lobby.Instance;
-            var playerName = Context.RequestCookies["name"]?.Value;
+            var playerName = GetCurrentUserName();
             var player = lobby.AllPlayers.Find(p => p.Name == playerName);
             Groups.Add(player.ConnectionId, $"Room{roomIndex}");
             var room = lobby.Rooms[roomIndex];
@@ -29,13 +30,12 @@ namespace WebClient.SignalR
         {
             await Task.Run(() =>
             {
-                var newPlayerName =
-                    Context.RequestCookies["name"]?.Value;
+                var newPlayerName = GetCurrentUserName();
+                if (newPlayerName == null)
+                    return;
                 var newPlayer = new Player(newPlayerName) {ConnectionId = Context.ConnectionId};
                 var lobby = Lobby.Instance;
                 lobby.AddPlayer(newPlayer);
-
-                
             });
         }
 
@@ -51,7 +51,15 @@ namespace WebClient.SignalR
 
         public override Task OnReconnected()
         {
-            return base.OnReconnected();
+            return OnConnected();
+        }
+
+        private string GetCurrentUserName()
+        {
+            var cookie = Context.RequestCookies["userid"];
+            if (cookie == null)
+                return null;
+            return FormsAuthentication.Decrypt(cookie.Value).Name;
         }
     }
 }
