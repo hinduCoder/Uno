@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Uno.Model
 {
@@ -21,7 +22,27 @@ namespace Uno.Model
 
         public override string ToString()
         {
-            return $"{(Type == CardType.Number ? Number.ToString() : Type.ToString())} {(Color != CardColor.Black ? Color.ToString() : "")}";
+            var s = String.Empty;
+            switch (Type)
+            {
+                case CardType.Reverse:
+                    s = "\x21d7\x21d9";
+                    break;
+                case CardType.Skip:
+                    s = "\x00d8";
+                    break;
+                case CardType.DrawTwo:
+                    s = "+2";
+                    break;
+                case CardType.Wild:
+                    s = "\x2295";
+                    break;
+                case CardType.WildDrawFour:
+                    s = "+4";
+                    break;
+            }
+
+            return $"{(Type == CardType.Number ? Number.ToString() : s)}";
         }
     }
 }

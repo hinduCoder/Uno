@@ -1,13 +1,21 @@
 ﻿var game = $.connection.gameHub;
 game.client.move = function (top) {
-    if (top != undefined)
-        $('.top-card').text(top);
-    setEnabled($('.card'));
+    if (top != undefined) {
+        var topCard = $('.top-card');
+        topCard.text(top.content);
+        topCard.removeClass('red');
+        topCard.removeClass('yellow');
+        topCard.removeClass('green');
+        topCard.removeClass('blue');
+        topCard.removeClass('black');
+        topCard.addClass(top.color);
+    }
+    setEnabled($('.cards').children());
     setEnabled($('btn-draw'));
     setDisabled($('.btn-pass'));
 };
 game.client.draw = function(newCard) {
-    $('<button>').text(newCard).appendTo($('.cards'));
+    $('<button>').text(newCard.content).addClass('card').addClass(newCard.color).appendTo($('.cards'));
 };
 $.connection.hub.start().done(function() {
     console.log('OK');
@@ -16,7 +24,16 @@ $.connection.hub.start().done(function() {
 
     $('.card').on('click', function() {
         game.server.move($(this).index());
-        $('.top-card').text($(this).text());
+        var topCard = $('.top-card');
+        topCard.text($(this).text());
+        topCard.text(top.content);
+        topCard.removeClass('red');
+        topCard.removeClass('yellow');
+        topCard.removeClass('green');
+        topCard.removeClass('blue');
+        topCard.removeClass('black');
+        topCard.addClass($(this).attr('class').split(/\s+/)[1]);
+
         $(this).remove();
         $('.card').prop('disabled', true);
     });
@@ -27,7 +44,7 @@ $.connection.hub.start().done(function() {
         setEnabled($('.btn-pass'));
     });
     $('.btn-pass').on('click', function () {
-        setDisabled($('.card'));
+        setDisabled($('.cards').children());
         game.server.pass();
     });
 });

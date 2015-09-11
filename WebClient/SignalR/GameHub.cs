@@ -28,12 +28,12 @@ namespace WebClient.SignalR
             var gameSession = room.GameSession;
             gameSession.Discard(index);
             var topCard = gameSession.Game.DiscardPileTop;
-            Clients.AllExcept(currentPlayer.ConnectionId).move(SerializeCard(topCard));
+            Clients.AllExcept(currentPlayer.ConnectionId).move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
         }
 
-        private string SerializeCard(Card card)
+        private object SerializeCard(Card card)
         {
-            return $"{(card.Type == CardType.Number ? card.Number.ToString() : card.Type.ToString())} {card.Color}";
+            return new {color = card.Color.ToString().ToLower(), content = card.ToString()};
         }
 
         public void Draw()

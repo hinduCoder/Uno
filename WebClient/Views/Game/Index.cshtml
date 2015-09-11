@@ -6,7 +6,7 @@
     Page.Title = "Uno";
 }
 @section head {
-    @*@Styles.Render("~/Content/Game.less")*@
+    @Styles.Render("~/Content/Game.less")
     @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
@@ -19,16 +19,16 @@
         var card = player.Cards[i];
         if (gameSession.CurrentPlayer == player)
         {
-            <button class="card btn-default btn">@card.ToString()</button>
+            <button class="card btn-default btn @card.Color.ToString().ToLower()">@card.ToString()</button>
         }
         else
         {
-            <button class="card btn btn-default" disabled="disabled">@card.ToString()</button>
+            <button class="card btn btn-default @card.Color.ToString().ToLower()" disabled="disabled">@card.ToString()</button>
         }
     }
 </div>
 
-<div class="top-card">
+<div class="top-card card @gameSession.Game.DiscardPileTop.Color.ToString().ToLower()">
     @gameSession.Game.DiscardPileTop.ToString()
 </div>
 <button class="btn-draw btn btn-default">Draw</button> 

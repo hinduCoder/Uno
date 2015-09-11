@@ -11,7 +11,7 @@ namespace WebClient.Controllers
         {
             var cookie = Request.Cookies["userid"];
             if (cookie == null)
-                return null;
+                return Redirect("/");
             var userName = FormsAuthentication.Decrypt(cookie.Value).Name;
             var lobby = Lobby.Instance;
             var currentPlayer = lobby.GetPlayerByName(userName);
