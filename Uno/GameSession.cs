@@ -13,7 +13,16 @@ namespace Uno
         bool _reverse;
         bool _unoSaid;
 
-        public event EventHandler<WildCardDiscardedEventArgs> WildCardDiscarded;
+        private EventHandler<WildCardDiscardedEventArgs> _wildCardEvent;
+        public event EventHandler<WildCardDiscardedEventArgs> WildCardDiscarded
+        {
+            add
+            {
+                if (_wildCardEvent == null)
+                    _wildCardEvent = value;
+            }
+            remove { _wildCardEvent = null; }
+        }
         public event EventHandler<GameFinishedEventArgs> GameFinished;
         
         public GameSession(params string[] players)
@@ -26,8 +35,8 @@ namespace Uno
             CardColor chosenColor = CardColor.Black;
             if (e.SpecialCardType == CardType.Wild || e.SpecialCardType == CardType.WildDrawFour)
             {
-                var wildCardDiscardedEventArgs = new WildCardDiscardedEventArgs();
-                WildCardDiscarded?.Invoke(this, wildCardDiscardedEventArgs);
+                var wildCardDiscardedEventArgs = new WildCardDiscardedEventArgs(CurrentPlayer);
+                _wildCardEvent?.Invoke(this, wildCardDiscardedEventArgs);
                 chosenColor = wildCardDiscardedEventArgs.Color;
             }
             switch (e.SpecialCardType)

@@ -6,7 +6,7 @@ namespace Uno.Model
     public class Card
     {
         public CardType Type { get; private set; }
-        public CardColor Color { get; internal set; }
+        public CardColor Color { get;  set; }
         public int Number { get; private set; }
 
         public Card()

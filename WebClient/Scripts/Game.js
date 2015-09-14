@@ -9,11 +9,23 @@ game.client.move = function (top) {
 };
 game.client.activate = function() {
     setEnabled($('.cards').children());
-    setEnabled($('btn-draw'));
+    setEnabled($('.btn-draw'));
 }
 game.client.draw = function(newCard) {
-    $('<button>').text(newCard.content).addClass('card').addClass('btn').addClass('btn-default').addClass(newCard.color).appendTo($('.cards'));
+    var newButton = $('<button>');
+    newButton.text(newCard.content).addClass('card').addClass('btn').addClass('btn-default').addClass(newCard.color).appendTo($('.cards'));
+    newButton.on('click', function () {
+        move($(this));
+    });
 };
+game.client.chooseColor = function() {
+    var color = prompt("Choose color");
+    game.server.chooseColor(color);
+    addColorClass($('.top-card'), color);
+};
+game.client.chosenColor = function(color) {
+    addColorClass($('.top-card'), color);
+}
 $.connection.hub.start().done(function() {
     console.log('OK');
     var ress = window.location.pathname.split('/');

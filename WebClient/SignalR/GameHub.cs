@@ -1,58 +1,75 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
+using Uno;
 using Uno.Model;
 using WebClient.Controllers;
+using Player = WebClient.Controllers.Player;
 
 namespace WebClient.SignalR
 {
     public class GameHub : Hub
     {
         private Lobby _lobby = Lobby.Instance;
+        private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
 
         public void Enter(int id)
         {
             var currentUserName = GetCurrentUserName();
             if (currentUserName == null)
                 return;
-            _lobby.GetPlayerByName(currentUserName).ConnectionId =
+            var player = _lobby.GetPlayerByName(currentUserName);
+            player.ConnectionId =
                 Context.ConnectionId;
-            
+            player.Room.GameSession.WildCardDiscarded += OnWildCardDiscarded;
+        }
+
+        private void OnWildCardDiscarded(object sender, WildCardDiscardedEventArgs e)
+        {
+            Clients.Client(_lobby.GetPlayerByName(e.Player.Name).ConnectionId).chooseColor();
         }
 
         public void Move(int index)
         {
-            var lobby = _lobby;
-            var currentPlayer = lobby.GetPlayerByName(GetCurrentUserName());
-            var room = currentPlayer.Room;
+            var room = CurrentPlayer.Room;
             var gameSession = room.GameSession;
             gameSession.Discard(index);
             var topCard = gameSession.DiscardPileTop;
-            Clients.AllExcept(currentPlayer.ConnectionId).move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
-            Clients.Client(lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+            ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
+            Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
         }
 
         public void Draw()
         {
-            var lobby = _lobby;
-            var currentUser = lobby.GetPlayerByName(GetCurrentUserName());
-            var room = currentUser.Room;
+            var room = CurrentPlayer.Room;
             var gameSession = room.GameSession;
             var currentPlayer = gameSession.CurrentPlayer;
             gameSession.Draw();
             Clients.Caller.draw(SerializeCard(currentPlayer.Cards.Last()));
         }
 
-
         public void Pass()
         {
-            var lobby = _lobby;
-            var currentPlayer = lobby.GetPlayerByName(GetCurrentUserName());
-            var room = currentPlayer.Room;
+            var room = CurrentPlayer.Room;
             var gameSession = room.GameSession;
             gameSession.Pass();
-            Clients.AllExcept(currentPlayer.ConnectionId).move();
-            Clients.Client(lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+            ToCurrentPlayerRoom().move();
+            Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+        }
+
+        public void ChooseColor(string color)
+        {
+            var chosenColor = (CardColor) Enum.Parse(typeof (CardColor), color, ignoreCase: true);
+            CurrentPlayer.Room.GameSession.DiscardPileTop.Color = chosenColor;
+            ToCurrentPlayerRoom().chosenColor(color);
+        }
+
+        private dynamic ToCurrentPlayerRoom()
+        {
+            return
+                Clients.Clients(
+                    CurrentPlayer.Room.Players.Except(new[] {CurrentPlayer}).Select(p => p.ConnectionId).ToList());
         }
 
         private object SerializeCard(Card card)
