@@ -100,5 +100,6 @@ namespace Uno
         public Model.Uno Game => _uno;
 
         public IReadOnlyList<Player> Players => _players;
+        public Card DiscardPileTop => Game.DiscardPileTop;
     }
 }

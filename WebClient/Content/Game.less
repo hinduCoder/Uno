@@ -1,21 +1,32 @@
-﻿.card {
+﻿@red: #e40808;
+@yellow: #e5d135;
+@green: #60b417;
+@blue: #4953c2;
+@disabled-color: #808080;
+.card {
     color: white;
+   
     &.red {
-        background: #e40808;
+        background: @red;
     }
     &.yellow {
-        background: #e5d135;
+        background: @yellow;
     }
     &.green {
-        background: #60b417;
+        background: @green;
     }
     &.blue {
-        background: #4953c2;
+        background: @blue;
     }
     &.black {
         background: black;
     }
     &:disabled {
-        background: #808080;
+        background: @disabled-color;
     }
+}
+.top-card {
+    .card();
+    text-align:center;
+    padding: 10px;
 }

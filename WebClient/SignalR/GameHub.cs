@@ -27,13 +27,9 @@ namespace WebClient.SignalR
             var room = currentPlayer.Room;
             var gameSession = room.GameSession;
             gameSession.Discard(index);
-            var topCard = gameSession.Game.DiscardPileTop;
+            var topCard = gameSession.DiscardPileTop;
             Clients.AllExcept(currentPlayer.ConnectionId).move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
-        }
-
-        private object SerializeCard(Card card)
-        {
-            return new {color = card.Color.ToString().ToLower(), content = card.ToString()};
+            Clients.Client(lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
         }
 
         public void Draw()
@@ -56,6 +52,12 @@ namespace WebClient.SignalR
             var gameSession = room.GameSession;
             gameSession.Pass();
             Clients.AllExcept(currentPlayer.ConnectionId).move();
+            Clients.Client(lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+        }
+
+        private object SerializeCard(Card card)
+        {
+            return new {color = card.Color.ToString().ToLower(), content = card.ToString()};
         }
 
         private string GetCurrentUserName()

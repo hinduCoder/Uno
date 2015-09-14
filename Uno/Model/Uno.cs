@@ -91,6 +91,6 @@ namespace Uno.Model
         }
 
         public IReadOnlyList<Card> Cards => _cards;
-        public Card DiscardPileTop => _discardPile.Count == 0 ? null : _discardPile[_discardPile.Count - 1];
+        internal Card DiscardPileTop => _discardPile.Count == 0 ? null : _discardPile[_discardPile.Count - 1];
     }
 }

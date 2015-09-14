@@ -2,20 +2,17 @@
 game.client.move = function (top) {
     if (top != undefined) {
         var topCard = $('.top-card');
+        addColorClass(topCard, top.color);
         topCard.text(top.content);
-        topCard.removeClass('red');
-        topCard.removeClass('yellow');
-        topCard.removeClass('green');
-        topCard.removeClass('blue');
-        topCard.removeClass('black');
-        topCard.addClass(top.color);
     }
-    setEnabled($('.cards').children());
-    setEnabled($('btn-draw'));
     setDisabled($('.btn-pass'));
 };
+game.client.activate = function() {
+    setEnabled($('.cards').children());
+    setEnabled($('btn-draw'));
+}
 game.client.draw = function(newCard) {
-    $('<button>').text(newCard.content).addClass('card').addClass(newCard.color).appendTo($('.cards'));
+    $('<button>').text(newCard.content).addClass('card').addClass('btn').addClass('btn-default').addClass(newCard.color).appendTo($('.cards'));
 };
 $.connection.hub.start().done(function() {
     console.log('OK');
@@ -23,32 +20,43 @@ $.connection.hub.start().done(function() {
     game.server.enter(ress[ress.length - 1]);
 
     $('.card').on('click', function() {
-        game.server.move($(this).index());
-        var topCard = $('.top-card');
-        topCard.text($(this).text());
-        topCard.text(top.content);
-        topCard.removeClass('red');
-        topCard.removeClass('yellow');
-        topCard.removeClass('green');
-        topCard.removeClass('blue');
-        topCard.removeClass('black');
-        topCard.addClass($(this).attr('class').split(/\s+/)[1]);
-
-        $(this).remove();
-        $('.card').prop('disabled', true);
+        move($(this));
     });
 
     $('.btn-draw').on('click', function() {
-        game.server.draw();
-        setDisabled($(this));
-        setEnabled($('.btn-pass'));
+        draw();
     });
     $('.btn-pass').on('click', function () {
-        setDisabled($('.cards').children());
-        game.server.pass();
+        pass();
     });
 });
 
+function move(card) {
+    game.server.move(card.index());
+    var topCard = $('.top-card');
+    topCard.text(card.text());
+    addColorClass(topCard, card.data('color'));// $(this).attr('class').split(/\s+/)[1]);
+    card.remove();
+    setDisabled($('.card'));
+}
+function draw() {
+    game.server.draw();
+    setDisabled($('.btn-draw'));
+    setEnabled($('.btn-pass'));
+}
+function pass() {
+    setDisabled($('.cards').children());
+    game.server.pass();
+}
+function addColorClass(jq, className) {
+    jq.removeClass('red');
+    jq.removeClass('yellow');
+    jq.removeClass('green');
+    jq.removeClass('blue');
+    jq.removeClass('black');
+    jq.addClass(className);
+    jq.data('color', className);
+}
 function setDisabled(jq) {
     jq.prop('disabled', true);
 }

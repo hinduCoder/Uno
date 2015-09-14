@@ -17,19 +17,13 @@
     @for (var i = 0; i < player.Cards.Count; i++)
     {
         var card = player.Cards[i];
-        if (gameSession.CurrentPlayer == player)
-        {
-            <button class="card btn-default btn @card.Color.ToString().ToLower()">@card.ToString()</button>
-        }
-        else
-        {
-            <button class="card btn btn-default @card.Color.ToString().ToLower()" disabled="disabled">@card.ToString()</button>
-        }
+        var colorClass = @card.Color.ToString().ToLower();
+        <button data-color="@colorClass" class="card btn btn-default @colorClass" @(gameSession.CurrentPlayer != player ? "disabled" : "")>@card.ToString()</button>
     }
 </div>
 
-<div class="top-card card @gameSession.Game.DiscardPileTop.Color.ToString().ToLower()">
-    @gameSession.Game.DiscardPileTop.ToString()
+<div class="top-card @gameSession.DiscardPileTop.Color.ToString().ToLower()">
+    @gameSession.DiscardPileTop.ToString()
 </div>
 <button class="btn-draw btn btn-default">Draw</button> 
 <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
