@@ -11,15 +11,17 @@ namespace Uno.Model
             Name = name;
         }
 
-        public void AddCards(params Card[] cards)
+        internal void AddCards(params Card[] cards)
         {
             _cards.AddRange(cards);
         }
-        public void AddCards(IEnumerable<Card> cards)
+
+        internal void AddCards(IEnumerable<Card> cards)
         {
             _cards.AddRange(cards);
         }
-        public Card Discard(int index)
+
+        internal Card Discard(int index)
         {
             var result = _cards[index];
             _cards.RemoveAt(index);

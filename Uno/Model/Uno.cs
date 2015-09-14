@@ -13,17 +13,20 @@ namespace Uno.Model
             Generate();
             Shuffle();
         }
-        public void Start()
+
+        internal void Start()
         {
             Discard(DrawCard());
         }
-        public List<Card> DrawCards(int count)
+
+        internal List<Card> DrawCards(int count)
         {
             var result = _cards.Where((e, i) => i >= _cards.Count - count).ToList();
             _cards.RemoveRange(_cards.Count - count, count);
             return result;
         }
-        public Card DrawCard() => DrawCards(1)[0];
+
+        internal Card DrawCard() => DrawCards(1)[0];
 
         public bool CanDiscard(Card card)
         {
