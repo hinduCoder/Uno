@@ -12,11 +12,7 @@ game.client.activate = function() {
     setEnabled($('.btn-draw'));
 }
 game.client.draw = function(newCard) {
-    var newButton = $('<button>');
-    newButton.text(newCard.content).addClass('card').addClass('btn').addClass('btn-default').addClass(newCard.color).appendTo($('.cards'));
-    newButton.on('click', function () {
-        move($(this));
-    });
+    
 };
 game.client.chooseColor = function() {
     var color = prompt("Choose color");
@@ -25,6 +21,18 @@ game.client.chooseColor = function() {
 };
 game.client.chosenColor = function(color) {
     addColorClass($('.top-card'), color);
+}
+game.client.preLastDiscarded = function() {
+    setEnabled($('.btn-uno'));
+}
+game.client.addCards = function(cards) {
+    cards.forEach(function(card) {
+        var newButton = $('<button>');
+        newButton.text(card.content).addClass('card').addClass('btn').addClass('btn-default').addClass(card.color).appendTo($('.cards'));
+        newButton.on('click', function () {
+            move($(this));
+        });
+    });
 }
 $.connection.hub.start().done(function() {
     console.log('OK');
@@ -40,6 +48,10 @@ $.connection.hub.start().done(function() {
     });
     $('.btn-pass').on('click', function () {
         pass();
+    });
+    $('.btn-uno').on('click', function() {
+        game.server.uno();
+        setDisabled($(this));
     });
 });
 

@@ -24,7 +24,17 @@ namespace Uno
             remove { _wildCardEvent = null; }
         }
         public event EventHandler<GameFinishedEventArgs> GameFinished;
-        
+        private EventHandler<PreLastCardDiscardedEventArgs> _preLastCardDiscarded;
+        public event EventHandler<PreLastCardDiscardedEventArgs> PreLastCardDiscarded
+        {
+            add
+            {
+                if (_preLastCardDiscarded == null)
+                    _preLastCardDiscarded = value;
+            }
+            remove { _preLastCardDiscarded = null; }
+        }
+
         public GameSession(params string[] players)
         {
             _players.AddRange(players.Select(p => new Player(p)));
@@ -70,14 +80,12 @@ namespace Uno
         public void Discard(int index)
         {
             _uno.Discard(CurrentPlayer.Discard(index));
+            if (CurrentPlayer.Cards.Count == 2)
+                _preLastCardDiscarded?.Invoke(this, new PreLastCardDiscardedEventArgs(CurrentPlayer));
             NextPlayer();
             _unoSaid = false;
         }
 
-        public void Discard(Card card)
-        {
-            Discard(CurrentPlayer.Cards.Single(c => c == card));
-        }
         public void Pass()
         {
             NextPlayer();

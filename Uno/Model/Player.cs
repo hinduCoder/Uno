@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Uno.Model
 {
@@ -6,6 +8,17 @@ namespace Uno.Model
     {
         private List<Card> _cards = new List<Card>();
         public string Name { get; private set; }
+        private EventHandler<CardsAddedEventArgs> _cardsAdded;
+        public event EventHandler<CardsAddedEventArgs> CardsAdded
+        {
+            add
+            {
+                if (_cardsAdded == null)
+                    _cardsAdded = value;
+            }
+            remove { _cardsAdded = null; }
+        }
+
         public Player(string name)
         {
             Name = name;
@@ -14,11 +27,12 @@ namespace Uno.Model
         internal void AddCards(params Card[] cards)
         {
             _cards.AddRange(cards);
+            _cardsAdded?.Invoke(this, new CardsAddedEventArgs(this, cards));
         }
 
         internal void AddCards(IEnumerable<Card> cards)
         {
-            _cards.AddRange(cards);
+            AddCards(cards.ToArray());
         }
 
         internal Card Discard(int index)

@@ -5,6 +5,7 @@ using Microsoft.AspNet.SignalR;
 using Uno;
 using Uno.Model;
 using WebClient.Controllers;
+using WebGrease.Css.Extensions;
 using Player = WebClient.Controllers.Player;
 
 namespace WebClient.SignalR
@@ -22,12 +23,25 @@ namespace WebClient.SignalR
             var player = _lobby.GetPlayerByName(currentUserName);
             player.ConnectionId =
                 Context.ConnectionId;
-            player.Room.GameSession.WildCardDiscarded += OnWildCardDiscarded;
+            var gameSession = player.Room.GameSession;
+            gameSession.WildCardDiscarded += OnWildCardDiscarded;
+            gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
+            gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
+        }
+
+        private void OnCardsAdded(object sender, CardsAddedEventArgs e)
+        {
+            ToClientWithName(e.Player.Name).addCards(e.Cards.Select(SerializeCard));
+        }
+
+        private void GameSessionOnPreLastCardDiscarded(object sender, PreLastCardDiscardedEventArgs e)
+        {
+            ToClientWithName(e.Player.Name).preLastDiscarded();
         }
 
         private void OnWildCardDiscarded(object sender, WildCardDiscardedEventArgs e)
         {
-            Clients.Client(_lobby.GetPlayerByName(e.Player.Name).ConnectionId).chooseColor();
+            ToClientWithName(e.Player.Name).chooseColor();
         }
 
         public void Move(int index)
@@ -65,11 +79,21 @@ namespace WebClient.SignalR
             ToCurrentPlayerRoom().chosenColor(color);
         }
 
+        public void Uno()
+        {
+            CurrentPlayer.Room.GameSession.Uno();
+        }
+
         private dynamic ToCurrentPlayerRoom()
         {
             return
                 Clients.Clients(
                     CurrentPlayer.Room.Players.Except(new[] {CurrentPlayer}).Select(p => p.ConnectionId).ToList());
+        }
+
+        private dynamic ToClientWithName(string name)
+        {
+            return Clients.Client(_lobby.GetPlayerByName(name).ConnectionId);
         }
 
         private object SerializeCard(Card card)

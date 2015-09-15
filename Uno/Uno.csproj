@@ -49,10 +49,12 @@
   <ItemGroup>
     <Compile Include="Model\Card.cs" />
     <Compile Include="Model\CardColor.cs" />
+    <Compile Include="Events\CardsAddedEventArgs.cs" />
     <Compile Include="Model\CardType.cs" />
     <Compile Include="Events\GameFinishedEventArgs.cs" />
     <Compile Include="GameSession.cs" />
     <Compile Include="Model\Player.cs" />
+    <Compile Include="Events\PreLastCardDiscardedEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Events\SpecialCardDiscardedEventArgs.cs" />
