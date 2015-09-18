@@ -22,17 +22,15 @@ game.client.preLastDiscarded = function() {
 }
 game.client.addCards = function(cards) {
     cards.forEach(function(card) {
-        var newButton = $('<button>');
-        newButton.text(card.content).addClass('card').addClass('btn').addClass('btn-default').addClass(card.color).appendTo($('.cards'));
-        newButton.on('click', function () {
+        var newButton = Mustache.render($('#new-card-template').html(), card);
+        $('.cards').append(newButton);
+        $('.card').click(function () {
             move($(this));
         });
+        $('.card').prop('disabled', $('.card').eq(0).prop('disabled'));
     });
 }
 $.connection.hub.start().done(function() {
-    console.log('OK');
-    var ress = window.location.pathname.split('/');
-    game.server.enter(ress[ress.length - 1]);
 
     $('.card').click(function () {
         move($(this));
@@ -58,7 +56,7 @@ function move(card) {
     game.server.move(card.index());
     var topCard = $('.top-card');
     topCard.text(card.text());
-    addColorClass(topCard, card.data('color'));// $(this).attr('class').split(/\s+/)[1]);
+    addColorClass(topCard, card.data('color'));
     card.remove();
     setDisabled($('.card'));
 }

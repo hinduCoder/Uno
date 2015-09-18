@@ -10,35 +10,39 @@
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Game.js")
-}
+    @Scripts.Render("~/Scripts/mustache.min.js")
+    <script id="new-card-template" type="x-tmpl-mustache">
+        <button class="card btn btn-default {{color}}" disabled="disabled">{{content}}</button>
+    </script>
+    }
 
-<div class="cards">   
-    @for (var i = 0; i < player.Cards.Count; i++)
+    <div class="cards">
+        @for (var i = 0; i < player.Cards.Count; i++)
     {
         var card = player.Cards[i];
         var colorClass = @card.Color.ToString().ToLower();
-        <button data-color="@colorClass" class="card btn btn-default @colorClass" @(gameSession.CurrentPlayer != player ? "disabled" : "")>@card.ToString()</button>
-    }
-</div>
+            <button data-color="@colorClass" class="card btn btn-default @colorClass" @(gameSession.CurrentPlayer != player ? "disabled" : "")>@card.ToString()</button>
+        }
+    </div>
 
-<div class="top-card @gameSession.DiscardPileTop.Color.ToString().ToLower()">
-    @gameSession.DiscardPileTop.ToString()
-</div>
-<button class="btn-draw btn btn-default">Draw</button> 
-<button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
-<button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
+    <div class="top-card @gameSession.DiscardPileTop.Color.ToString().ToLower()">
+        @gameSession.DiscardPileTop.ToString()
+    </div>
+    <button class="btn-draw btn btn-default">Draw</button>
+    <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
+    <button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
 
 
-<!-- Modal -->
-<div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button data-dismiss="modal" data-color="red" class="btn red"/>
-                <button data-dismiss="modal" data-color="green" class="btn green"/>
-                <button data-dismiss="modal" data-color="yellow" class="btn yellow"/>
-                <button data-dismiss="modal" data-color="blue" class="btn blue"/>
+    <!-- Modal -->
+    <div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button data-dismiss="modal" data-color="red" class="btn red" />
+                    <button data-dismiss="modal" data-color="green" class="btn green" />
+                    <button data-dismiss="modal" data-color="yellow" class="btn yellow" />
+                    <button data-dismiss="modal" data-color="blue" class="btn blue" />
+                </div>
             </div>
         </div>
     </div>
-</div>

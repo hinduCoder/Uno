@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -20,6 +21,8 @@ namespace WebClient.Controllers
                 return RedirectToRoute(new {controller="Home"});
             var gameSession = room.CreateGameSession();
             ViewBag.Player =  gameSession.Players.Single(p => p.Name == userName);
+
+            Response.CacheControl = "no-cache";
             return View(gameSession);
         }
     }
