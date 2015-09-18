@@ -13,9 +13,9 @@ namespace WebClient.Controllers
         {
         }
 
-        public void AddRooms()
+        public void AddRoom(int playersCount = 2)
         {
-            _rooms.Add(new Room());
+            _rooms.Add(new Room { MaxPlayersCount = playersCount});
         }
 
         public void AddPlayer(Player player)
@@ -39,7 +39,7 @@ namespace WebClient.Controllers
 
         public Player GetPlayerByName(string name)
         {
-            return AllPlayers.Single(p => p.Name == name);
+            return AllPlayers.SingleOrDefault(p => p.Name == name);
         }
     }
 }

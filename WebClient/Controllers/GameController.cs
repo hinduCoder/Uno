@@ -7,7 +7,7 @@ namespace WebClient.Controllers
     public class GameController : Controller
     {
         // GET: Game
-        public ActionResult Index(int id)
+        public ActionResult Index()
         {
             var cookie = Request.Cookies["userid"];
             if (cookie == null)
@@ -15,9 +15,11 @@ namespace WebClient.Controllers
             var userName = FormsAuthentication.Decrypt(cookie.Value).Name;
             var lobby = Lobby.Instance;
             var currentPlayer = lobby.GetPlayerByName(userName);
-            var room = currentPlayer.Room;
+            var room = currentPlayer?.Room;
+            if (room == null)
+                return RedirectToRoute(new {controller="Home"});
             var gameSession = room.CreateGameSession();
-            ViewBag.Player = gameSession.Players.Single(p => p.Name == userName);
+            ViewBag.Player =  gameSession.Players.Single(p => p.Name == userName);
             return View(gameSession);
         }
     }

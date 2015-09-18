@@ -9,30 +9,56 @@
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Room.js")
+    @Scripts.Render("~/Scripts/mustache.min.js")
+    @Styles.Render("~/Content/Room.less")
+    <script id="room-template" type="x-tmpl-mustache">
+        <div class="jumbotron room">
+            <div class="players">
+            </div>
+            <button class="btn-join btn btn-default">Join</button>
+            @Html.RouteLink("Start", new {action = "Start"}, new {@class = "btn-start btn btn-default disabled"})
+            <span>Places left: <span class="places-left">{{placesCount}}</span></span>
+        </div>
+    </script>
 }
 
 @{
     var rooms = ViewBag.RoomContainer.Rooms;
 }
-@for (int i = 0; i < rooms.Count; i++)
-{
-    var room = rooms[i];
-    <div class="jumbotron" style="width: 200px; padding: 5px; margin: 5px; display: inline-block;">
-        <div class="players">
-            @foreach (var player in room.Players)
-            {
-                <p>@player.Name</p>
-            }
+<div class="rooms">
+    @for (int i = 0; i < rooms.Count; i++)
+    {
+        var room = rooms[i];
 
+        <div class="jumbotron room">
+            <div class="players">
+                @foreach (var player in room.Players)
+                {
+                    <p>@player.Name</p>
+                }
+            </div>
+            <button class="btn-join btn btn-default" @Help.If(!ViewBag.CanJoin, "disabled")>Join</button>
+            @Html.RouteLink("Start", new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.CanStart, "disabled")}"})
+            <span>Places left: <span class="places-left">@(room.MaxPlayersCount - room.Players.Count)</span></span>
+            
         </div>
-        @if (ViewBag.CanJoin)
-        {
-            <button class="btn-join btn btn-default">Join</button>
-        }
-        @using (Html.BeginForm("Start", "Room", FormMethod.Get))
-        {
-            @Html.Hidden("id", i)
-            <input type="submit" value="Start" class="btn-start btn btn-default" style="display: @(room.CanStart ? "block" : "none")"/>
-        }
+
+    }
+</div>
+
+<!-- Button trigger modal -->
+<button type="button"  class="btn btn-default" data-toggle="modal" data-target="#myModal">
+    + Room
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <input type="number" placeholder="Player count" min="2" max="10" class="form-control" value="4" id="input-players-count"/>
+                <button class="btn btn-primary" id="btn-add-room" data-dismiss="modal">Create</button>
+            </div>
+        </div>
     </div>
-}
+</div>

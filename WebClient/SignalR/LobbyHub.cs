@@ -11,26 +11,30 @@ namespace WebClient.SignalR
 {
     public class LobbyHub : Hub
     {
+        private readonly Lobby _lobby = Lobby.Instance;
+
         public void AddPlayerToRoom(int roomIndex)
         {
-            var lobby = Lobby.Instance;
-            var playerName = GetCurrentUserName();
-            var player = lobby.AllPlayers.Find(p => p.Name == playerName);
-            Groups.Add(player.ConnectionId, $"Room{roomIndex}");
-            var room = lobby.Rooms[roomIndex];
+            var player = _lobby.GetPlayerByName(GetCurrentUserName());
+            var room = _lobby.Rooms[roomIndex];
             room.AddPlayer(player);
             
-            Clients.All.addPlayerToRoom(roomIndex, playerName);
+            Clients.All.addPlayerToRoom(roomIndex, GetCurrentUserName());
             if (room.CanStart)
-                Clients.Group($"Room{roomIndex}").allowStart(roomIndex);
-            //Clients.Clients(room.Players.Select(p => p.ConnectionId).ToList()).allowStart(roomIndex);
+                Clients.Clients(room.Players.Select(p => p.ConnectionId).ToList()).allowStart(roomIndex);
+        }
+
+        public void AddRoom(int playersCount)
+        {
+            _lobby.AddRoom(playersCount);
+            Clients.All.addRoom(playersCount);
         }
 
         public override async Task OnConnected()
         {
             await Task.Run(() =>
             {
-                var newPlayerName = GetCurrentUserName();
+                    var newPlayerName = GetCurrentUserName();
                 if (newPlayerName == null)
                     return;
                 var newPlayer = new Player(newPlayerName) {ConnectionId = Context.ConnectionId};

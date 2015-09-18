@@ -9,12 +9,19 @@ namespace WebClient
     public class Room
     {
         readonly List<Player> _players = new List<Player>();
-        
+
+        public string Id { get; private set; }
+
+        public Room()
+        {
+            Id = DateTime.Now.Ticks.ToString();
+        }
+
         public void AddPlayer(Player player)
         {
             _players.Add(player);
             player.Room = this;
-            if (_players.Count == PlayerCount)
+            if (_players.Count == MaxPlayersCount)
                 CanStart = true;
         }
 
@@ -22,7 +29,7 @@ namespace WebClient
         {
             _players.Remove(player);
             player.Room = null;
-            if (_players.Count < PlayerCount)
+            if (_players.Count < MaxPlayersCount)
                 CanStart = false;
         }
 
@@ -40,7 +47,9 @@ namespace WebClient
 
         public bool CanStart { get; private set; }
 
-        public int PlayerCount { get; set; } = 2;
+        public int MaxPlayersCount { get; set; } = 2;
+
+        public bool IsFull => _players.Count == MaxPlayersCount;
 
         public GameSession GameSession { get; set; }
     }

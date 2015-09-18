@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Web.WebSockets;
 using Newtonsoft.Json;
 using WebGrease.Css.Extensions;
@@ -18,16 +19,20 @@ namespace WebClient.Controllers
         // GET: Room
         public ActionResult Index()
         {
-            if (Request.Cookies["userid"] == null)
+            var cookie = Request.Cookies["userid"];
+            if (cookie == null)
                 return Redirect("/");
-            ViewBag.RoomContainer = Lobby.Instance;
-            ViewBag.CanJoin = !Lobby.Instance.Rooms.Any(r => r.Players.Any(p => p.Name == Request.Cookies["name"]?.Value));
+            var lobby = Lobby.Instance;
+            ViewBag.RoomContainer = lobby;
+            var room = lobby.GetPlayerByName(FormsAuthentication.Decrypt(cookie.Value).Name)?.Room;
+            ViewBag.CanJoin = room == null || !room.IsFull;
             return View();
         }
 
-        public ActionResult Start(int id)
+        public ActionResult Start()
         {
-            return Redirect($"/Game/Index/{id}");
+            //return Redirect($"/Game/Index/{id}");
+            return Redirect($"/Game/");
         }
     }
 

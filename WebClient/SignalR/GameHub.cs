@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
 using Uno;
@@ -17,16 +18,7 @@ namespace WebClient.SignalR
 
         public void Enter(int id)
         {
-            var currentUserName = GetCurrentUserName();
-            if (currentUserName == null)
-                return;
-            var player = _lobby.GetPlayerByName(currentUserName);
-            player.ConnectionId =
-                Context.ConnectionId;
-            var gameSession = player.Room.GameSession;
-            gameSession.WildCardDiscarded += OnWildCardDiscarded;
-            gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
-            gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
+           
         }
 
         private void OnCardsAdded(object sender, CardsAddedEventArgs e)
@@ -107,6 +99,44 @@ namespace WebClient.SignalR
             if (cookie == null)
                 return null;
             return FormsAuthentication.Decrypt(cookie.Value).Name;
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            return Task.Run(() =>
+            {
+                var currentUserName = GetCurrentUserName();
+                if (currentUserName == null)
+                    return;
+                var player = _lobby.GetPlayerByName(currentUserName);
+                player.ConnectionId = null;
+                var gameSession = player.Room.GameSession;
+                gameSession.WildCardDiscarded -= OnWildCardDiscarded;
+                gameSession.PreLastCardDiscarded -= GameSessionOnPreLastCardDiscarded;
+                gameSession.Players.ForEach(p => p.CardsAdded -= OnCardsAdded);
+            });
+        }
+
+        public override Task OnConnected()
+        {
+            return Task.Run(() =>
+            {
+                var currentUserName = GetCurrentUserName();
+                if (currentUserName == null)
+                    return;
+                var player = _lobby.GetPlayerByName(currentUserName);
+                player.ConnectionId =
+                    Context.ConnectionId;
+                var gameSession = player.Room.GameSession;
+                gameSession.WildCardDiscarded += OnWildCardDiscarded;
+                gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
+                gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
+            });
+        }
+
+        public override Task OnReconnected()
+        {
+            return base.OnReconnected();
         }
     }
 }
