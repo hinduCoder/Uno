@@ -10,8 +10,9 @@ lobby.client.allowStart = function(roomIndex) {
     $('.rooms').children().eq(roomIndex).find('.btn-start').removeClass('disabled');
 }
 lobby.client.addRoom = function(placesCount) {
-    $('.rooms').append(Mustache.render($('#room-template').html(), { placesCount: placesCount }));
-    $('.btn-join').click(joinHandler);
+    var newRoom = $(Mustache.render($('#room-template').html(), { placesCount: placesCount }));
+    $('.rooms').append(newRoom);
+    newRoom.click(joinHandler);
 }
 $.connection.hub.start().done(function () {  
     $('.btn-join').click(joinHandler);

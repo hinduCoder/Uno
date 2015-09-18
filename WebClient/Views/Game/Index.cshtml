@@ -12,7 +12,7 @@
     @Scripts.Render("~/Scripts/Game.js")
     @Scripts.Render("~/Scripts/mustache.min.js")
     <script id="new-card-template" type="x-tmpl-mustache">
-        <button class="card btn btn-default {{color}}" disabled="disabled">{{content}}</button>
+        <button class="card btn btn-default {{color}}" data-color="{{color}}" disabled="disabled">{{content}}</button>
     </script>
     }
 

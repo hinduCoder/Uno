@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebClient.Exceptions;
 
 namespace Uno.Model
 {
@@ -53,7 +54,7 @@ namespace Uno.Model
         internal void Discard(Card card)
         {
             if (!CanDiscard(card))
-                throw new ArgumentException("This card cannot be discarded");
+                throw new WrongCardException();
             _discardPile.Add(card);
             if (card.Type != CardType.Number)
                 if (SpecialCardDiscarded != null)

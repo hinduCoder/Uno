@@ -22,12 +22,12 @@ game.client.preLastDiscarded = function() {
 }
 game.client.addCards = function(cards) {
     cards.forEach(function(card) {
-        var newButton = Mustache.render($('#new-card-template').html(), card);
+        var newButton = $(Mustache.render($('#new-card-template').html(), card));
         $('.cards').append(newButton);
-        $('.card').click(function () {
+        $(newButton).click(function () {
             move($(this));
         });
-        $('.card').prop('disabled', $('.card').eq(0).prop('disabled'));
+        $(newButton).prop('disabled', $('.card').eq(0).prop('disabled'));
     });
 }
 $.connection.hub.start().done(function() {
@@ -53,6 +53,7 @@ $.connection.hub.start().done(function() {
     });
 });
 function move(card) {
+    console.log(card.index());
     game.server.move(card.index());
     var topCard = $('.top-card');
     topCard.text(card.text());
