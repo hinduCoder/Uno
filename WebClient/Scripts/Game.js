@@ -11,13 +11,8 @@ game.client.activate = function() {
     setEnabled($('.cards').children());
     setEnabled($('.btn-draw'));
 }
-game.client.draw = function(newCard) {
-    
-};
 game.client.chooseColor = function() {
-    var color = prompt("Choose color");
-    game.server.chooseColor(color);
-    addColorClass($('.top-card'), color);
+    $('#choose-color-modal').modal('show');
 };
 game.client.chosenColor = function(color) {
     addColorClass($('.top-card'), color);
@@ -39,22 +34,26 @@ $.connection.hub.start().done(function() {
     var ress = window.location.pathname.split('/');
     game.server.enter(ress[ress.length - 1]);
 
-    $('.card').on('click', function() {
+    $('.card').click(function () {
         move($(this));
     });
 
-    $('.btn-draw').on('click', function() {
+    $('.btn-draw').click(function () {
         draw();
     });
-    $('.btn-pass').on('click', function () {
+    $('.btn-pass').click(function () {
         pass();
     });
-    $('.btn-uno').on('click', function() {
+    $('.btn-uno').click(function() {
         game.server.uno();
         setDisabled($(this));
     });
+    $('.modal .btn').click(function() {
+        var color = $(this).data('color');
+        game.server.chooseColor(color);
+        addColorClass($('.top-card'), color);
+    });
 });
-
 function move(card) {
     game.server.move(card.index());
     var topCard = $('.top-card');

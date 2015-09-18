@@ -21,8 +21,19 @@ namespace Uno.Model
 
         internal List<Card> DrawCards(int count)
         {
-            var result = _cards.Where((e, i) => i >= _cards.Count - count).ToList();
-            _cards.RemoveRange(_cards.Count - count, count);
+            List<Card> result = null;
+            if (_cards.Count < count)
+            {
+                result = _cards.ToList();
+                _cards.Clear();
+                _cards.AddRange(_discardPile);
+                Shuffle();
+            }
+            else
+            {
+                result = _cards.Where((e, i) => i >= _cards.Count - count).ToList();
+                _cards.RemoveRange(_cards.Count - count, count);
+            }
             return result;
         }
 

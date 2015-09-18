@@ -7,7 +7,6 @@
 }
 @section head {
     @Styles.Render("~/Content/Game.less")
-    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Game.js")
@@ -28,3 +27,18 @@
 <button class="btn-draw btn btn-default">Draw</button> 
 <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
 <button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
+
+
+<!-- Modal -->
+<div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button data-dismiss="modal" data-color="red" class="btn red"/>
+                <button data-dismiss="modal" data-color="green" class="btn green"/>
+                <button data-dismiss="modal" data-color="yellow" class="btn yellow"/>
+                <button data-dismiss="modal" data-color="blue" class="btn blue"/>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,7 +12,7 @@ namespace Uno
         int _currentPlayerIndex;
         bool _reverse;
         bool _unoSaid;
-
+#region Events
         private EventHandler<WildCardDiscardedEventArgs> _wildCardEvent;
         public event EventHandler<WildCardDiscardedEventArgs> WildCardDiscarded
         {
@@ -34,7 +34,7 @@ namespace Uno
             }
             remove { _preLastCardDiscarded = null; }
         }
-
+#endregion
         public GameSession(params string[] players)
         {
             _players.AddRange(players.Select(p => new Player(p)));
