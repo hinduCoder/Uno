@@ -52,5 +52,10 @@ namespace Uno.Model
         public bool CardsLeft => _cards.Count > 0;
 
         public IReadOnlyList<Card> Cards => _cards;
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

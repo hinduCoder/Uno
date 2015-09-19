@@ -55,6 +55,10 @@ game.client.finish = function(scores) {
 game.client.win = function() {
     alert('Congratulations');
 }
+
+game.client.log = function(desc) {
+    $('.list-group').prepend(Mustache.render($('#log-item-template').html(), { description: desc }));
+}
 function addNewCard(card) {
     var newButton = $(Mustache.render($('#new-card-template').html(), card));
     $('.cards').append(newButton);

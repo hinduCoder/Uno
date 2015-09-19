@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\WrongCardException.cs" />
+    <Compile Include="Log\ColorChosenEntry.cs" />
+    <Compile Include="Log\ILogEntry.cs" />
+    <Compile Include="Log\Log.cs" />
+    <Compile Include="Log\PlayerDrawnCardsEntry.cs" />
+    <Compile Include="Log\PlayerMovedEntry.cs" />
     <Compile Include="Model\Card.cs" />
     <Compile Include="Model\CardColor.cs" />
     <Compile Include="Events\CardsAddedEventArgs.cs" />

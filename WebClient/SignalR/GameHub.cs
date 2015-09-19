@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
 using Uno;
+using Uno.Log;
 using Uno.Model;
 using WebClient.Controllers;
 using WebClient.Exceptions;
@@ -16,6 +17,16 @@ namespace WebClient.SignalR
     {
         private Lobby _lobby = Lobby.Instance;
         private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
+
+        public GameHub()
+        {
+            Log.Loged = LogOnLoged;
+        }
+
+        private void LogOnLoged(object sender, LogEventArgs e)
+        {
+            ToRoomOfPlayerWithName(e.Entry.Player.Name).log(e.Entry.Description);
+        }
 
         private void OnCardsAdded(object sender, CardsAddedEventArgs e)
         {
@@ -50,7 +61,7 @@ namespace WebClient.SignalR
                 var topCard = gameSession.DiscardPileTop;
                 ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
                 Clients.Caller.discard(index);
-                Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+               ToClientWithName(gameSession.CurrentPlayer.Name).activate();
             }
             catch (WrongCardException e)
             {
@@ -73,7 +84,7 @@ namespace WebClient.SignalR
             var gameSession = room.GameSession;
             gameSession.Pass();
             ToCurrentPlayerRoom().move();
-            Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+            ToClientWithName(gameSession.CurrentPlayer.Name).activate();
         }
 
         public void ChooseColor(string color)
@@ -98,6 +109,11 @@ namespace WebClient.SignalR
         private dynamic ToClientWithName(string name)
         {
             return Clients.Client(_lobby.GetPlayerByName(name).ConnectionId);
+        }
+
+        private dynamic ToRoomOfPlayerWithName(string name)
+        {
+            return Clients.Clients(_lobby.GetPlayerByName(name).Room.Players.Select(p => p.ConnectionId).ToList());
         }
 
         private object SerializeCard(Card card)

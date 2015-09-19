@@ -12,7 +12,7 @@ lobby.client.allowStart = function(roomIndex) {
 lobby.client.addRoom = function(placesCount) {
     var newRoom = $(Mustache.render($('#room-template').html(), { placesCount: placesCount }));
     $('.rooms').append(newRoom);
-    newRoom.click(joinHandler);
+    newRoom.find('.btn-join').click(joinHandler);
 }
 $.connection.hub.start().done(function () {  
     $('.btn-join').click(joinHandler);

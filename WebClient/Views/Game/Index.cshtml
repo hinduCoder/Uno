@@ -14,13 +14,16 @@
     <script id="new-card-template" type="x-tmpl-mustache">
         <button class="card btn btn-default {{color}}" data-color="{{color}}" disabled="disabled">{{content}}</button>
     </script>
-    }
+    <script id="log-item-template" type="x-tmpl-mustache">
+        <li class="list-group-item">{{description}}</li>
+    </script>
+}
 
     <div class="cards">
         @for (var i = 0; i < player.Cards.Count; i++)
-    {
-        var card = player.Cards[i];
-        var colorClass = @card.Color.ToString().ToLower();
+        {
+            var card = player.Cards[i];
+            var colorClass = @card.Color.ToString().ToLower();
             <button data-color="@colorClass" class="card btn btn-default @colorClass" @(gameSession.CurrentPlayer != player ? "disabled" : "")>@card.ToString()</button>
         }
     </div>
@@ -32,16 +35,25 @@
     <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
     <button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
 
+    <div id="log" class="thumbnail">
+        <ul class="list-group">
+            @for (var i = 0; i < gameSession.Log.Entries.Count; i++)
+            {
+                var entry = gameSession.Log.Entries[i];
+                <li class="list-group-item">@entry.Description</li>
+            }
+        </ul>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <button data-dismiss="modal" data-color="red" class="btn red" />
-                    <button data-dismiss="modal" data-color="green" class="btn green" />
-                    <button data-dismiss="modal" data-color="yellow" class="btn yellow" />
-                    <button data-dismiss="modal" data-color="blue" class="btn blue" />
+                    <button data-dismiss="modal" data-color="red" class="btn red"/>
+                    <button data-dismiss="modal" data-color="green" class="btn green"/>
+                    <button data-dismiss="modal" data-color="yellow" class="btn yellow"/>
+                    <button data-dismiss="modal" data-color="blue" class="btn blue"/>
                 </div>
             </div>
         </div>
