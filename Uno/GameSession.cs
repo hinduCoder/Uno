@@ -24,7 +24,17 @@ namespace Uno
             }
             remove { _wildCardEvent = null; }
         }
-        public event EventHandler<GameFinishedEventArgs> GameFinished;
+        EventHandler<GameFinishedEventArgs> _gameFinishedEvent;
+        public event EventHandler<GameFinishedEventArgs> GameFinished
+        {
+            add
+            {
+                if (_gameFinishedEvent == null)
+                    _gameFinishedEvent = value;
+            }
+            remove { _gameFinishedEvent = null; }
+        }
+
         private EventHandler<PreLastCardDiscardedEventArgs> _preLastCardDiscarded;
         public event EventHandler<PreLastCardDiscardedEventArgs> PreLastCardDiscarded
         {
@@ -113,7 +123,7 @@ namespace Uno
         {
             if (!CurrentPlayer.CardsLeft)
             {
-                GameFinished?.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
+                _gameFinishedEvent?.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
                 return;
             }
             if (CurrentPlayer.Cards.Count == 1 && !_unoSaid)
@@ -129,5 +139,5 @@ namespace Uno
 
         public IReadOnlyList<Player> Players => _players;
         public Card DiscardPileTop => Game.DiscardPileTop;
-    }
+    }  
 }

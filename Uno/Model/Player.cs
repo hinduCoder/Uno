@@ -41,10 +41,16 @@ namespace Uno.Model
             _cards.RemoveAt(index);
             return result;
         }
-        public bool CardsLeft => _cards.Count > 0;
-        public IReadOnlyList<Card> Cards
+
+        internal void UndoDiscard(int index, Card card)
         {
-            get { return _cards; }
+            _cards.Insert(index, card);
         }
+
+        public int Score => _cards.Sum(c => c.Score);
+
+        public bool CardsLeft => _cards.Count > 0;
+
+        public IReadOnlyList<Card> Cards => _cards;
     }
 }

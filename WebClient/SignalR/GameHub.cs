@@ -32,6 +32,14 @@ namespace WebClient.SignalR
             ToClientWithName(e.Player.Name).chooseColor();
         }
 
+        private void GameSessionOnGameFinished(object sender, GameFinishedEventArgs e)
+        {
+            var winner = _lobby.GetPlayerByName(e.Winner.Name);
+            Clients.Client(winner.ConnectionId).win();
+            Clients.Clients(winner.Room.Players.Select(p => p.ConnectionId).ToList())
+                .finish(winner.Room.GameSession.Players.Select(p => new {player = p.Name, score = p.Score}));
+        }
+
         public void Move(int index)
         {
             var room = CurrentPlayer.Room;
@@ -134,9 +142,12 @@ namespace WebClient.SignalR
                 var gameSession = player.Room.GameSession;
                 gameSession.WildCardDiscarded += OnWildCardDiscarded;
                 gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
+                gameSession.GameFinished += GameSessionOnGameFinished;
                 gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
             });
         }
+
+        
 
         public override Task OnReconnected()
         {

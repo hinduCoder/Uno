@@ -46,6 +46,15 @@ game.client.addCards = function(cards) {
 game.client.wrongCard = function (index, card) {
     alert('Wrong card');    
 }
+game.client.finish = function(scores) {
+    var result = scores.reduce(function(prev, current) {
+        return prev + current.player + ': ' + current.score + '\n';
+    }, '');
+    alert(result);
+}
+game.client.win = function() {
+    alert('Congratulations');
+}
 function addNewCard(card) {
     var newButton = $(Mustache.render($('#new-card-template').html(), card));
     $('.cards').append(newButton);
