@@ -45,7 +45,7 @@ namespace Uno.Model
             if (DiscardPileTop == null)
                 return true;
             return card.Number == DiscardPileTop.Number
-                || card.Type == DiscardPileTop.Type
+                || card.Type != CardType.Number && card.Type == DiscardPileTop.Type
                 || card.Color == DiscardPileTop.Color
                 || card.Color == CardColor.Black;
         }
@@ -54,7 +54,7 @@ namespace Uno.Model
         internal void Discard(Card card)
         {
             if (!CanDiscard(card))
-                throw new WrongCardException();
+                throw new WrongCardException() { Card = card };
             _discardPile.Add(card);
             if (card.Type != CardType.Number)
                 if (SpecialCardDiscarded != null)

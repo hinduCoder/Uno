@@ -1,15 +1,33 @@
-﻿var game = $.connection.gameHub;
+﻿"use strict";
+
+$.fn.disabled = function (value) {
+    if (value !== undefined) {
+        $(this).prop('disabled', value);
+        return this;
+    } else
+        return $(this).prop('disabled');
+};
+
+var game = $.connection.gameHub;
 game.client.move = function (top) {
     if (top != undefined) {
         var topCard = $('.top-card');
         addColorClass(topCard, top.color);
         topCard.text(top.content);
     }
-    setDisabled($('.btn-pass'));
+    $('.btn-pass').disabled(true);
 };
+game.client.discard = function (index) {
+    var card = $('.card').eq(index);
+    var topCard = $('.top-card');
+    topCard.text(card.text());
+    addColorClass(topCard, card.data('color'));
+    card.remove();
+    $('.card').disabled(true);
+}
 game.client.activate = function() {
-    setEnabled($('.cards').children());
-    setEnabled($('.btn-draw'));
+    $('.card').disabled(false);
+    $('.btn-draw').disabled(false);
 }
 game.client.chooseColor = function() {
     $('#choose-color-modal').modal('show');
@@ -18,17 +36,23 @@ game.client.chosenColor = function(color) {
     addColorClass($('.top-card'), color);
 }
 game.client.preLastDiscarded = function() {
-    setEnabled($('.btn-uno'));
+    $('.btn-uno').disabled(false);
 }
 game.client.addCards = function(cards) {
     cards.forEach(function(card) {
-        var newButton = $(Mustache.render($('#new-card-template').html(), card));
-        $('.cards').append(newButton);
-        $(newButton).click(function () {
-            move($(this));
-        });
-        $(newButton).prop('disabled', $('.card').eq(0).prop('disabled'));
+        addNewCard(card);
     });
+}
+game.client.wrongCard = function (index, card) {
+    alert('Wrong card');    
+}
+function addNewCard(card) {
+    var newButton = $(Mustache.render($('#new-card-template').html(), card));
+    $('.cards').append(newButton);
+    newButton.click(function () {
+        move($(this));
+    });
+    newButton.disabled($('.card').eq(0).disabled());
 }
 $.connection.hub.start().done(function() {
 
@@ -44,7 +68,7 @@ $.connection.hub.start().done(function() {
     });
     $('.btn-uno').click(function() {
         game.server.uno();
-        setDisabled($(this));
+        $(this).disabled(true);
     });
     $('.modal .btn').click(function() {
         var color = $(this).data('color');
@@ -53,24 +77,21 @@ $.connection.hub.start().done(function() {
     });
 });
 function move(card) {
-    console.log(card.index());
     game.server.move(card.index());
-    var topCard = $('.top-card');
-    topCard.text(card.text());
-    addColorClass(topCard, card.data('color'));
-    card.remove();
-    setDisabled($('.card'));
+    
 }
 function draw() {
     game.server.draw();
-    setDisabled($('.btn-draw'));
-    setEnabled($('.btn-pass'));
+    $('.btn-draw').disabled(true);
+    $('.btn-pass').disabled(false);
+    $('.btn-uno').disable(false);
 }
 function pass() {
-    setDisabled($('.cards').children());
+    $('.cards').children().disabled(true);
     game.server.pass();
 }
 function addColorClass(jq, className) {
+    console.log(className);
     jq.removeClass('red');
     jq.removeClass('yellow');
     jq.removeClass('green');
@@ -78,10 +99,4 @@ function addColorClass(jq, className) {
     jq.removeClass('black');
     jq.addClass(className);
     jq.data('color', className);
-}
-function setDisabled(jq) {
-    jq.prop('disabled', true);
-}
-function setEnabled(jq) {
-    jq.prop('disabled', false);
 }

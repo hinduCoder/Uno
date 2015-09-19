@@ -6,6 +6,7 @@ using Microsoft.AspNet.SignalR;
 using Uno;
 using Uno.Model;
 using WebClient.Controllers;
+using WebClient.Exceptions;
 using WebGrease.Css.Extensions;
 using Player = WebClient.Controllers.Player;
 
@@ -15,11 +16,6 @@ namespace WebClient.SignalR
     {
         private Lobby _lobby = Lobby.Instance;
         private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
-
-        public void Enter(int id)
-        {
-           
-        }
 
         private void OnCardsAdded(object sender, CardsAddedEventArgs e)
         {
@@ -40,10 +36,18 @@ namespace WebClient.SignalR
         {
             var room = CurrentPlayer.Room;
             var gameSession = room.GameSession;
-            gameSession.Discard(index);
-            var topCard = gameSession.DiscardPileTop;
-            ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
-            Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+            try
+            {
+                gameSession.Discard(index);
+                var topCard = gameSession.DiscardPileTop;
+                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
+                Clients.Caller.discard(index);
+                Clients.Client(_lobby.GetPlayerByName(gameSession.CurrentPlayer.Name).ConnectionId).activate();
+            }
+            catch (WrongCardException e)
+            {
+                Clients.Caller.wrongCard(index, SerializeCard(e.Card));
+            }
         }
 
         public void Draw()

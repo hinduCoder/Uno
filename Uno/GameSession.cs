@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Uno.Model;
+using WebClient.Exceptions;
 
 namespace Uno
 {
@@ -79,7 +80,17 @@ namespace Uno
         }
         public void Discard(int index)
         {
-            _uno.Discard(CurrentPlayer.Discard(index));
+            Card cardToDiscard = null;
+            try
+            {
+                cardToDiscard = CurrentPlayer.Discard(index);
+                _uno.Discard(cardToDiscard);
+            }
+            catch (WrongCardException e)
+            {
+                CurrentPlayer.UndoDiscard(index, cardToDiscard);
+                throw;
+            }
             if (CurrentPlayer.Cards.Count == 2)
                 _preLastCardDiscarded?.Invoke(this, new PreLastCardDiscardedEventArgs(CurrentPlayer));
             NextPlayer();

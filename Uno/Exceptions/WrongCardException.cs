@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Uno.Model;
 
 namespace WebClient.Exceptions
 {
@@ -21,5 +22,7 @@ namespace WebClient.Exceptions
         protected WrongCardException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+
+        public Card Card { get; internal set; }
     }
 }
