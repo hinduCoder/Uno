@@ -44,16 +44,15 @@ game.client.addCards = function(cards) {
     });
 }
 game.client.wrongCard = function (index, card) {
-    alert('Wrong card');    
+    $('#wrong-card-alert').addClass('in');
+    setTimeout(() => $('#wrong-card-alert').removeClass('in'), 1000);
 }
 game.client.finish = function(scores) {
-    var result = scores.reduce(function(prev, current) {
-        return prev + current.player + ': ' + current.score + '\n';
-    }, '');
-    alert(result);
+    $('#score-modal .modal-body').html(Mustache.render($('#score-table-template').html(), { table: scores }));
+    $('#score-modal').modal('show');
 }
 game.client.win = function() {
-    alert('Congratulations');
+    $('#congrats-alert').addClass('in');
 }
 
 game.client.log = function(desc) {

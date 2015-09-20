@@ -48,7 +48,7 @@ namespace WebClient.SignalR
             var winner = _lobby.GetPlayerByName(e.Winner.Name);
             Clients.Client(winner.ConnectionId).win();
             Clients.Clients(winner.Room.Players.Select(p => p.ConnectionId).ToList())
-                .finish(winner.Room.GameSession.Players.Select(p => new {player = p.Name, score = p.Score}));
+                .finish(winner.Room.GameSession.Players.OrderBy(p => p.Score).Select(p => new {player = p.Name, score = p.Score}));
         }
 
         public void Move(int index)
@@ -137,6 +137,8 @@ namespace WebClient.SignalR
                 if (currentUserName == null)
                     return;
                 var player = _lobby.GetPlayerByName(currentUserName);
+                if (player == null)
+                    return;
                 player.ConnectionId = null;
                 var gameSession = player.Room.GameSession;
                 gameSession.WildCardDiscarded -= OnWildCardDiscarded;

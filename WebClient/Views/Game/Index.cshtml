@@ -17,6 +17,26 @@
     <script id="log-item-template" type="x-tmpl-mustache">
         <li class="list-group-item">{{description}}</li>
     </script>
+    <script id="score-table-template" type="x-tmpl-mustache">
+        <table class="table" id="score-table">
+            <thead>
+                <tr>
+                    <th>Place</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#table}}
+                <tr>
+                    <td></td>
+                    <td>{{player}}</td>
+                    <td>{{score}}</td>
+                </tr>
+                {{/table}}
+            </tbody>
+        </table>
+    </script>
 }
 
     <div class="cards">
@@ -24,7 +44,7 @@
         {
             var card = player.Cards[i];
             var colorClass = @card.Color.ToString().ToLower();
-            <button data-color="@colorClass" class="card btn btn-default @colorClass" @(gameSession.CurrentPlayer != player ? "disabled" : "")>@card.ToString()</button>
+            <button data-color="@colorClass" class="card btn btn-default @colorClass" @Help.If(gameSession.CurrentPlayer != player,"disabled")>@card.ToString()</button>
         }
     </div>
 
@@ -46,7 +66,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -58,3 +78,15 @@
             </div>
         </div>
     </div>
+<div class="modal fade" id="score-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-success fade" id="congrats-alert">Congratulations!!!</div>
+<div class="alert alert-danger fade" id="wrong-card-alert">Wrong card!!!</div>

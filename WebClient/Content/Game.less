@@ -5,7 +5,7 @@
 @disabled-color: #808080;
 .card {
     color: white;
-   
+    margin-left: 20px;
     &.red {
         background: @red;
     }
@@ -28,7 +28,10 @@
 .top-card {
     .card();
     text-align:center;
-    padding: 10px;
+    padding: 50px 10px;
+    font-size: 4em;
+    margin:auto;
+
 }
 
 .modal-body {
@@ -58,4 +61,25 @@
     height: 150px;
     overflow-y: scroll;
     
+}
+
+#score-table {
+    tbody {
+        counter-reset: place;
+    }
+    tr {
+        counter-increment: place;
+        td:first-child:before {
+            content: counter(place);
+        }
+        td {
+            text-align: left;
+        }
+    }
+}
+
+.alert {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
