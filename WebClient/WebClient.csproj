@@ -178,6 +178,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\Game.less" />
     <Content Include="Content\Room.less" />
+    <None Include="Properties\PublishProfiles\unowebapp.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -9,6 +9,8 @@ namespace Uno.Model
         private List<Card> _cards = new List<Card>();
         public string Name { get; private set; }
         private EventHandler<CardsAddedEventArgs> _cardsAdded;
+        private int _score;
+
         public event EventHandler<CardsAddedEventArgs> CardsAdded
         {
             add
@@ -47,12 +49,19 @@ namespace Uno.Model
             _cards.Insert(index, card);
         }
 
-        public int Score => _cards.Sum(c => c.Score);
+        internal void Reset()
+        {
+            _cards.Clear();
+        }
 
+        internal void CalculateScore()
+        {
+            _score += _cards.Sum(c => c.Score);
+        }
+
+        public int Score => _score;
         public bool CardsLeft => _cards.Count > 0;
-
         public IReadOnlyList<Card> Cards => _cards;
-
         public override string ToString()
         {
             return Name;

@@ -14,7 +14,7 @@ namespace Uno
         bool _reverse;
         bool _unoSaid;
         Log.Log _log = new Log.Log();
-#region Events
+        #region Events
         private EventHandler<WildCardDiscardedEventArgs> _wildCardEvent;
         public event EventHandler<WildCardDiscardedEventArgs> WildCardDiscarded
         {
@@ -46,6 +46,8 @@ namespace Uno
             }
             remove { _preLastCardDiscarded = null; }
         }
+
+        public EventHandler NewGameStarted;
 #endregion
         public GameSession(params string[] players)
         {
@@ -128,7 +130,7 @@ namespace Uno
         {
             if (!CurrentPlayer.CardsLeft)
             {
-                _gameFinishedEvent?.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
+                FinishGame();
                 return;
             }
             if (CurrentPlayer.Cards.Count == 1 && !_unoSaid)
@@ -142,11 +144,26 @@ namespace Uno
                 _currentPlayerIndex += _players.Count;
             _currentPlayerIndex %= _players.Count;
         }
+
+        private void FinishGame()
+        {
+            _players.ForEach(p => p.CalculateScore());
+            _gameFinishedEvent?.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
+            _uno.Reset();
+            _players.ForEach(p => p.Reset());
+            Deal();
+            NewGameStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        #region Properties
+
         public Player CurrentPlayer => _players[_currentPlayerIndex];
         public Model.Uno Game => _uno;
-
         public IReadOnlyList<Player> Players => _players;
         public Card DiscardPileTop => Game.DiscardPileTop;
         public Log.Log Log => _log;
+
+        #endregion
+
     }  
 }

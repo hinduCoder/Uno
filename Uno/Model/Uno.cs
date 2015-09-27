@@ -11,6 +11,13 @@ namespace Uno.Model
         readonly List<Card> _discardPile = new List<Card>();
         public Uno()
         {
+            Reset();
+        }
+
+        internal void Reset()
+        {
+            _discardPile.Clear();
+            _cards.Clear();
             Generate();
             Shuffle();
         }

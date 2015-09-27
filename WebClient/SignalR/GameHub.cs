@@ -16,6 +16,7 @@ namespace WebClient.SignalR
     public class GameHub : Hub
     {
         private Lobby _lobby = Lobby.Instance;
+        private bool _finished;
         private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
 
         public GameHub()
@@ -46,9 +47,19 @@ namespace WebClient.SignalR
         private void GameSessionOnGameFinished(object sender, GameFinishedEventArgs e)
         {
             var winner = _lobby.GetPlayerByName(e.Winner.Name);
-            Clients.Client(winner.ConnectionId).win();
+            //Clients.Client(winner.ConnectionId).win();
             Clients.Clients(winner.Room.Players.Select(p => p.ConnectionId).ToList())
                 .finish(winner.Room.GameSession.Players.OrderBy(p => p.Score).Select(p => new {player = p.Name, score = p.Score}));
+            _finished = true;
+        }
+        private void NewGameStarted(object sender, EventArgs eventArgs)
+        {
+            NewGame(sender as GameSession);
+        }
+        private void NewGame(GameSession gameSession)
+        {
+            ToRoomOfPlayerWithName(gameSession.Players[0].Name).newGame(SerializeCard(gameSession.DiscardPileTop));
+            ToClientWithName(gameSession.CurrentPlayer.Name).activate();
         }
 
         public void Move(int index)
@@ -58,6 +69,11 @@ namespace WebClient.SignalR
             try
             {
                 gameSession.Discard(index);
+                if (_finished)
+                {
+                    _finished = false;
+                    return;
+                }
                 var topCard = gameSession.DiscardPileTop;
                 ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
                 Clients.Caller.discard(index);
@@ -161,11 +177,13 @@ namespace WebClient.SignalR
                 gameSession.WildCardDiscarded += OnWildCardDiscarded;
                 gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
                 gameSession.GameFinished += GameSessionOnGameFinished;
+                gameSession.NewGameStarted = NewGameStarted;
                 gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
             });
         }
 
         
+
 
         public override Task OnReconnected()
         {
