@@ -7,13 +7,13 @@ namespace WebClient.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddEmail : IMigrationMetadata
+    public sealed partial class Pipe : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddEmail));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Pipe));
         
         string IMigrationMetadata.Id
         {
-            get { return "201509081612161_AddEmail"; }
+            get { return "201510012208504_Pipe"; }
         }
         
         string IMigrationMetadata.Source

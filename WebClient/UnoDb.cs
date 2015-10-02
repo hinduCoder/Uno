@@ -4,12 +4,12 @@ namespace WebClient
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-
     public partial class UnoDb : DbContext
     {
         public UnoDb()
             : base("name=UnoDb")
         {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<UnoDb>());
         }
 
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
@@ -27,6 +27,7 @@ namespace WebClient
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Email);
+            
         }
     }
 }

@@ -16,7 +16,7 @@
     <RootNamespace>WebClient</RootNamespace>
     <AssemblyName>WebClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -203,13 +203,9 @@
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="C__MigrationHistory.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Migrations\201509081612161_AddEmail.cs" />
-    <Compile Include="Migrations\201509081612161_AddEmail.Designer.cs">
-      <DependentUpon>201509081612161_AddEmail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201509081701035_AddId.cs" />
-    <Compile Include="Migrations\201509081701035_AddId.Designer.cs">
-      <DependentUpon>201509081701035_AddId.cs</DependentUpon>
+    <Compile Include="Migrations\201510012208504_Pipe.cs" />
+    <Compile Include="Migrations\201510012208504_Pipe.Designer.cs">
+      <DependentUpon>201510012208504_Pipe.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Lobby.cs" />
@@ -253,11 +249,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201509081612161_AddEmail.resx">
-      <DependentUpon>201509081612161_AddEmail.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201509081701035_AddId.resx">
-      <DependentUpon>201509081701035_AddId.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510012208504_Pipe.resx">
+      <DependentUpon>201510012208504_Pipe.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -275,7 +268,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54954</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54954/</IISUrl>
+          <IISUrl>http://localhost/WebClient</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://192.168.0.102</CustomServerUrl>

@@ -17,7 +17,7 @@ namespace WebClient.Controllers
             var cookie = Request.Cookies["userid"];
             if (cookie != null && (!FormsAuthentication.Decrypt(cookie.Value)?.Expired ?? false))
             {
-                return Redirect("/Room");
+                return RedirectToAction("Index", "Room");
             }
             return View();
 
@@ -38,7 +38,7 @@ namespace WebClient.Controllers
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
                 Response.SetCookie(new HttpCookie("userid", encryptedTicket) {Expires = DateTime.Now.AddMinutes(30)});
             }
-            return Redirect("/Room");
+            return RedirectToAction("Index", "Room");
         }
 
         public ActionResult Register()
@@ -58,7 +58,7 @@ namespace WebClient.Controllers
                 });
                 unoDb.SaveChanges();
             }
-            return Redirect("/");
+            return RedirectToAction("Index");
         }
         [System.Web.Mvc.HttpGet]
         public ActionResult IsUsernameFree([FromUri] string username)

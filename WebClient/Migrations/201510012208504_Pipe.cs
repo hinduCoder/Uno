@@ -3,7 +3,7 @@ namespace WebClient.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddEmail : DbMigration
+    public partial class Pipe : DbMigration
     {
         public override void Up()
         {
@@ -18,22 +18,24 @@ namespace WebClient.Migrations
             //        })
             //    .PrimaryKey(t => new { t.MigrationId, t.ContextKey });
             
-            //CreateTable(
-            //    "dbo.User",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false),
-            //            Username = c.String(nullable: false, maxLength: 100, unicode: false),
-            //            Password = c.String(nullable: false, maxLength: 200, unicode: false),
-            //            Email = c.String(nullable: false, maxLength: 100),
-            //        })
-            //    .PrimaryKey(t => t.Id);
-            AddColumn("dbo.User", "email", builder => builder.String(false, 110));
+            CreateTable(
+                "dbo.Users",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Username = c.String(nullable: false, maxLength: 100, unicode: false),
+                        Password = c.String(nullable: false, maxLength: 200, unicode: false),
+                        Email = c.String(nullable: false, maxLength: 150),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            
         }
         
         public override void Down()
         {
-            DropColumn("dbo.User", "email");
+            DropTable("dbo.Users");
+            DropTable("dbo.__MigrationHistory");
         }
     }
 }
