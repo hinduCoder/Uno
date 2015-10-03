@@ -1,14 +1,4 @@
-﻿"use strict";
-
-$.fn.disabled = function (value) {
-    if (value !== undefined) {
-        $(this).prop('disabled', value);
-        return this;
-    } else
-        return $(this).prop('disabled');
-};
-
-var game = $.connection.gameHub;
+﻿var game = $.connection.gameHub;
 $.extend(game.client, {
     move: function(top) {
         if (top != undefined) {
@@ -38,11 +28,11 @@ $.extend(game.client, {
         $('.btn-uno').disabled(false);
     },
     addCards: function(cards) {
-        cards.forEach(card => addNewCard(card));
+        cards.forEach(function (card) { addNewCard(card)});
     },
     wrongCard: function() {
         $('#wrong-card-alert').addClass('in');
-        setTimeout(() => $('#wrong-card-alert').removeClass('in'), 1000);
+        setTimeout(function () { $('#wrong-card-alert').removeClass('in')}, 1000);
     },
     finish: function (scores) {
         $('.card').remove();
@@ -119,3 +109,10 @@ function addColorClass(jq, className) {
     jq.addClass(className);
     jq.data('color', className);
 }
+$.fn.disabled = function (value) {
+    if (value !== undefined) {
+        $(this).prop('disabled', value);
+        return this;
+    } else
+        return $(this).prop('disabled');
+};
