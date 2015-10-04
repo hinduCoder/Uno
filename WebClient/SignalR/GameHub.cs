@@ -165,12 +165,19 @@ namespace WebClient.SignalR
 
         public override Task OnConnected()
         {
+            return ConnectTask();
+        }
+
+        private Task ConnectTask()
+        {
             return Task.Run(() =>
             {
                 var currentUserName = GetCurrentUserName();
                 if (currentUserName == null)
                     return;
                 var player = _lobby.GetPlayerByName(currentUserName);
+                if (player == null)
+                    return;
                 player.ConnectionId =
                     Context.ConnectionId;
                 var gameSession = player.Room.GameSession;
@@ -179,15 +186,23 @@ namespace WebClient.SignalR
                 gameSession.GameFinished += GameSessionOnGameFinished;
                 gameSession.NewGameStarted = NewGameStarted;
                 gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
+                InitializeClient(player);
             });
         }
 
-        
+        private void InitializeClient(Player player)
+        {
+            var gameSession = player.Room.GameSession;
+            var gamePlayer = gameSession.Players.Single(p => p.Name == player.Name);
+            Clients.Client(player.ConnectionId)
+                .init(gamePlayer.Cards.Select(SerializeCard), SerializeCard(gameSession.DiscardPileTop));
+            ToClientWithName(gameSession.CurrentPlayer.Name).activate();
+        }
 
 
         public override Task OnReconnected()
         {
-            return base.OnReconnected();
+            return ConnectTask();
         }
     }
 }
