@@ -7,6 +7,9 @@
 }
 @section head {
     @Styles.Render("~/Content/Game.less")
+
+    @Scripts.Render("~/Scripts/angular.min.js")
+    <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Game.js")
@@ -38,24 +41,19 @@
         </table>
     </script>
 }
-
+<div id="wrapper" ng-app="App" ng-controller="MainController" ng-init="init()">
     <div class="cards">
-        @for (var i = 0; i < player.Cards.Count; i++)
-        {
-            var card = player.Cards[i];
-            var colorClass = @card.Color.ToString().ToLower();
-            <button data-color="@colorClass" class="card btn btn-default @colorClass" @Help.If(gameSession.CurrentPlayer != player,"disabled")>@card.ToString()</button>
-        }
+            <button ng-repeat="card in cards" data-color="{{card.color}}" class="card btn btn-default {{card.color}}" ng-disabled="!isCurrentPlayer" ng-click="move($index)" >{{card.content}}</button>
     </div>
 
-    <div class="top-card @gameSession.DiscardPileTop.Color.ToString().ToLower()">
-        @gameSession.DiscardPileTop.ToString()
+    <div class="top-card {{topCard.color}}">
+        {{topCard.content}}
     </div>
-    <button class="btn-draw btn btn-default" @Help.If(gameSession.CurrentPlayer != player,"disabled")>Draw</button>
-    <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
-    <button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
+    <button class="btn-draw btn btn-default" ng-disabled="!canDraw" ng-click="draw()">Draw</button>
+    <button class="btn-pass btn btn-default" ng-disabled="!canPass" ng-click="pass()">Pass</button>
+    <button class="btn-uno btn btn-default" ng-disabled="!canUno" ng-click="uno()">Uno</button>
 
-    <div id="log" class="thumbnail">
+    @*<div id="log" class="thumbnail">
         <ul class="list-group">
             @for (var i = 0; i < gameSession.Log.Entries.Count; i++)
             {
@@ -63,30 +61,35 @@
                 <li class="list-group-item">@entry.Description</li>
             }
         </ul>
-    </div>
+    </div>*@
 
     <!-- Modal -->
-    <div class="modal fade" id="choose-color-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button data-dismiss="modal" data-color="red" class="btn red"/>
-                    <button data-dismiss="modal" data-color="green" class="btn green"/>
-                    <button data-dismiss="modal" data-color="yellow" class="btn yellow"/>
-                    <button data-dismiss="modal" data-color="blue" class="btn blue"/>
-                </div>
-            </div>
+    <script type="text/ng-template" id="chooseColorModalTemplate">
+        <div class="modal-body">
+            <button ng-repeat="color in colors" class="btn {{color}}" ng-click="choose(color)"></button>
         </div>
-    </div>
-<div class="modal fade" id="score-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                 
-            </div>
+    </script>
+    <script type="text/ng-template" id="scoreModalTemplate">
+        <div class="modal-body">
+            <table class="table" id="score-table">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in rows">
+                        <td></td>
+                        <td>{{row.player}}</td>
+                        <td>{{row.score}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
+    </script>
 
-<div class="alert alert-success fade" id="congrats-alert">Congratulations!!!</div>
-<div class="alert alert-danger fade" id="wrong-card-alert">Wrong card!!!</div>
+    <div class="alert alert-success fade" id="congrats-alert">Congratulations!!!</div>
+    <div class="alert alert-danger fade" id="wrong-card-alert">Wrong card!!!</div>
+</div>
