@@ -18,7 +18,7 @@
             chooseColor: game.server.chooseColor 
         }
     });
-angular.module('App', ['Game', 'ui.bootstrap'])
+angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
     .controller('MainController', function($scope, $game, $modal, $alert) {
         var setHandler = function(name, fn) {
             $game.setHandler(name, function() {

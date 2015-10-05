@@ -24,6 +24,9 @@
     &:disabled {
         opacity: 0.3;
     }
+    &:hover {
+        color: white;
+    }
 }
 .top-card {
     .card();
@@ -78,8 +81,24 @@
     }
 }
 
-.alert {
+#alerts {
     position: absolute;
     bottom: 0;
     width: 100%;
+    .alert {
+        &.ng-enter {
+             transition: opacity 0.2s ease-out;
+             opacity: 0;
+             &.ng-enter-active {
+                 opacity: 1;
+             }
+        }
+        &.ng-leave {
+            transition: opacity 0.2s ease-in;
+             opacity: 1;
+             &.ng-leave-active {
+                 opacity: 0;
+             }
+        }
+    }
 }
