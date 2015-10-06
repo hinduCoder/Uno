@@ -27,6 +27,9 @@
     &:disabled {
         opacity: 0.3;
     }
+    &:hover {
+        color: white;
+    }
 }
 
 .top-card {
@@ -36,6 +39,14 @@
     font-size: 4em;
     margin:auto;
     width: auto;
+}
+.other-players {
+    display: flex;
+    justify-content: space-around;
+    .other-player {
+        text-align: center;
+        font-size: 2em;
+    }
 }
 
 .modal-body {
@@ -82,8 +93,24 @@
     }
 }
 
-.alert {
+#alerts {
     position: absolute;
     bottom: 0;
     width: 100%;
+    .alert {
+        &.ng-enter {
+             transition: opacity 0.2s ease-out;
+             opacity: 0;
+             &.ng-enter-active {
+                 opacity: 1;
+             }
+        }
+        &.ng-leave {
+            transition: opacity 0.2s ease-in;
+             opacity: 1;
+             &.ng-leave-active {
+                 opacity: 0;
+             }
+        }
+    }
 }
