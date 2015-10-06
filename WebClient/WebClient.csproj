@@ -160,10 +160,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\UnoDB.mdf" />
+<!--     <Content Include="App_Data\UnoDB.mdf" />
     <Content Include="App_Data\UnoDB_log.ldf">
       <DependentUpon>UnoDB.mdf</DependentUpon>
-    </Content>
+    </Content> -->
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
