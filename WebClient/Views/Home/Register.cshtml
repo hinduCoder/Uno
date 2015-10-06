@@ -18,12 +18,12 @@
 <div>
     @using (@Html.BeginForm("SignUp", "Home", FormMethod.Post))
     {
-        <div class="form-group">
+        @*<div class="form-group">
             <label for="inputEmail" class="col-sm-2 control-label">Email</label>
             <div class="col-sm-10">
                 @Html.TextBoxFor(rvm => rvm.Email, new {@class = "form-control", id = "inputEmail", type = "email"})
             </div>
-        </div>
+        </div>*@
         <div class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">Login</label>
             <div class="col-sm-10">

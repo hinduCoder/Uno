@@ -29,10 +29,10 @@ namespace WebClient.Controllers
             {
                 var user = unoDb.Users.SingleOrDefault(u => u.Username == login.Username);
                 if (user == null)
-                    return HttpNotFound("No such user"); // TODO: TEMP
+                    return Error("No such user");// HttpNotFound("No such user"); // TODO: TEMP
                 var hashedPasswordString = Encrypt.SHA1(login.Password);
                 if (!user.Password.Equals(hashedPasswordString, StringComparison.OrdinalIgnoreCase))
-                    return HttpNotFound("Password wrong");
+                    return Error("Password wrong");
 
                 var ticket = new FormsAuthenticationTicket(login.Username, true, 30);
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -52,13 +52,13 @@ namespace WebClient.Controllers
             {
                 unoDb.Users.Add(new User
                 {
-                    Email = register.Email,
+                    //Email = register.Email,
                     Password = Encrypt.SHA1(register.Password),
                     Username = register.Username
                 });
                 unoDb.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return LogIn(new LoginViewModel {Username = register.Username, Password = register.Password});
         }
         [System.Web.Mvc.HttpGet]
         public ActionResult IsUsernameFree([FromUri] string username)
@@ -68,6 +68,11 @@ namespace WebClient.Controllers
                 var all = unoDb.Users.All(u => u.Username != username);
                 return Json(new {response = all}, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        private ActionResult Error(string error)
+        {
+            return View("Error", (object)error);
         }
     }
 }
