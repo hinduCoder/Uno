@@ -4,7 +4,6 @@ $.extend(game.client, {
         if (top != undefined) {
             setTopCard(top);
         }
-        $('.btn-draw').disabled(false);
         $('.btn-pass').disabled(true);
     },
     discard: function(index) {
@@ -83,7 +82,7 @@ $.connection.hub.start().done(function() {
 });
 function move(card) {
     game.server.move(card.index());
-   
+    $('.btn-draw').disabled(true);
 }
 function draw() {
     game.server.draw();
