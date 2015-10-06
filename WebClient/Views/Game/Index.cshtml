@@ -51,9 +51,11 @@
     <div class="top-card @gameSession.DiscardPileTop.Color.ToString().ToLower()">
         @gameSession.DiscardPileTop.ToString()
     </div>
-    <button class="btn-draw btn btn-default" @Help.If(gameSession.CurrentPlayer != player,"disabled")>Draw</button>
+<div class="buttons">
+    <button class="btn-draw btn btn-default" @Help.If(gameSession.CurrentPlayer != player, "disabled")>Draw</button>
     <button class="btn-pass btn btn-default" disabled="disabled">Pass</button>
     <button class="btn-uno btn btn-default" disabled="disabled">Uno</button>
+</div>
 
     @*<div id="log" class="thumbnail">
         <ul class="list-group">
