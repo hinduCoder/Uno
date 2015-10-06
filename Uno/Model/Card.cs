@@ -44,5 +44,25 @@ namespace Uno.Model
 
             return $"{(Type == CardType.Number ? Number.ToString() : s)}";
         }
+        
+        public int Score
+        {
+            get
+            {
+                switch (Type)
+                {
+                    
+                    case CardType.Reverse:
+                    case CardType.Skip:
+                    case CardType.DrawTwo:
+                        return 20;
+                    case CardType.Wild:
+                    case CardType.WildDrawFour:
+                        return 50;
+                    default:
+                        return Number;
+                }
+            }
+        }
     }
 }
