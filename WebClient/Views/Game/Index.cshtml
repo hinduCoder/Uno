@@ -15,32 +15,6 @@
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Game.js")
     @Scripts.Render("~/Scripts/mustache.min.js")
-    <script id="new-card-template" type="x-tmpl-mustache">
-        <button class="card btn btn-default {{color}}" data-color="{{color}}" disabled="disabled">{{content}}</button>
-    </script>
-    <script id="log-item-template" type="x-tmpl-mustache">
-        <li class="list-group-item">{{description}}</li>
-    </script>
-    <script id="score-table-template" type="x-tmpl-mustache">
-        <table class="table" id="score-table">
-            <thead>
-                <tr>
-                    <th>Place</th>
-                    <th>Name</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#table}}
-                <tr>
-                    <td></td>
-                    <td>{{player}}</td>
-                    <td>{{score}}</td>
-                </tr>
-                {{/table}}
-            </tbody>
-        </table>
-    </script>
 }
 <div id="wrapper" ng-app="App" ng-controller="MainController" ng-init="init()">
     <div class="cards">
@@ -52,17 +26,14 @@
     </div>
     <button class="btn-draw btn btn-default" ng-disabled="!canDraw" ng-click="draw()">Draw</button>
     <button class="btn-pass btn btn-default" ng-disabled="!canPass" ng-click="pass()">Pass</button>
-    <button class="btn-uno btn btn-default" ng-disabled="!canUno" ng-click="uno()">Uno</button>
+    <button class="btn-uno btn btn-default" ng-disabled="cards.length != 2" ng-click="uno()">Uno</button>
 
-    @*<div id="log" class="thumbnail">
-        <ul class="list-group">
-            @for (var i = 0; i < gameSession.Log.Entries.Count; i++)
-            {
-                var entry = gameSession.Log.Entries[i];
-                <li class="list-group-item">@entry.Description</li>
-            }
-        </ul>
-    </div>*@
+    <div class="other-players">
+        <div class="other-player" ng-repeat="otherPlayer in otherPlayers">
+            <div>{{otherPlayer.name}}</div>
+            <div>{{otherPlayer.cardsCount}}</div>
+        </div>
+    </div>
 
     <!-- Modal -->
     <script type="text/ng-template" id="chooseColorModalTemplate">

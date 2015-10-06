@@ -29,10 +29,12 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
             });
         };
         $scope.init = function() {
-            $game.init(function(cards, topCard) {
+            $game.init(function(data) {
                 $scope.$apply(function(scope) {
-                    scope.cards = cards;
-                    scope.topCard = topCard;
+                    scope.cards = data.cards;
+                    scope.topCard = data.topCard;
+                    scope.otherPlayers = data.otherPlayers;
+                    scope.deck = data.deck;
                 });
             });
             setHandler('activate', function() {
@@ -43,11 +45,12 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
                 this.topCard = this.cards.splice(index, 1)[0];
                 this.isCurrentPlayer = false;
             });
-            setHandler('move', function(top) {
+            setHandler('move', function(top, player) {
                 if (top)
                     this.topCard = top;
                 this.canDraw = true;
                 this.canPass = false;
+                this.otherPlayers.filter(function(p) { return p.name === player })[0].cardsCount--;
             });
             setHandler('preLastDiscarded', function() {
                 $scope.canUno = true;
@@ -78,6 +81,9 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
             });
             setHandler('wrongCard', function() {
                 $alert.danger('WRONG CARD!!!');
+            });
+            setHandler('cardsAdded', function(player, count) {
+                this.otherPlayers.filter(function(p) { return p.name == player })[0].cardsCount += count;
             });
         }
         $scope.move = function(index) {

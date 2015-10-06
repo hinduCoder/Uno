@@ -31,7 +31,9 @@ namespace WebClient.SignalR
 
         private void OnCardsAdded(object sender, CardsAddedEventArgs e)
         {
-            ToClientWithName(e.Player.Name).addCards(e.Cards.Select(SerializeCard));
+            var name = e.Player.Name;
+            ToClientWithName(name).addCards(e.Cards.Select(SerializeCard));
+            ToRoomOfPlayerWithName(name).cardsAdded(name, e.Cards.Count);
         }
 
         private void GameSessionOnPreLastCardDiscarded(object sender, PreLastCardDiscardedEventArgs e)
@@ -68,6 +70,7 @@ namespace WebClient.SignalR
             var gameSession = room.GameSession;
             try
             {
+                var currentPlayer = gameSession.CurrentPlayer;
                 gameSession.Discard(index);
                 if (_finished)
                 {
@@ -75,7 +78,7 @@ namespace WebClient.SignalR
                     return;
                 }
                 var topCard = gameSession.DiscardPileTop;
-                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString() });
+                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString()}, currentPlayer.Name);
                 Clients.Caller.discard(index);
                ToClientWithName(gameSession.CurrentPlayer.Name).activate();
             }
@@ -195,7 +198,13 @@ namespace WebClient.SignalR
             var gameSession = player.Room.GameSession;
             var gamePlayer = gameSession.Players.Single(p => p.Name == player.Name);
             Clients.Client(player.ConnectionId)
-                .init(gamePlayer.Cards.Select(SerializeCard), SerializeCard(gameSession.DiscardPileTop));
+                .init(new
+                {
+                    cards = gamePlayer.Cards.Select(SerializeCard),
+                    topCard = SerializeCard(gameSession.DiscardPileTop),
+                    otherPlayers = gameSession.Players.Except(new [] { gamePlayer }).Select(p => new {name = p.Name, cardsCount = p.Cards.Count}),
+                    deck = gameSession.Game.Cards.Count
+                });
             ToClientWithName(gameSession.CurrentPlayer.Name).activate();
         }
 

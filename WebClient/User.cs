@@ -21,7 +21,7 @@ namespace WebClient
         [StringLength(200)]
         public string Password { get; set; }
 
-        [Required]
+        
         [StringLength(150)]
         public string Email { get; set; }
     }
