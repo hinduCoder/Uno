@@ -35,6 +35,11 @@ namespace Uno.Model
                 result = _cards.ToList();
                 _cards.Clear();
                 _cards.AddRange(_discardPile);
+                foreach (var card in _cards)
+                {
+                    if (card.Type == CardType.Wild || card.Type == CardType.WildDrawFour)
+                        card.Color = CardColor.Black;
+                } //Temp fix
                 Shuffle();
             }
             else
