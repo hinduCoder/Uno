@@ -28,6 +28,9 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
                 });
             });
         };
+        var findOtherPlayerByName = function (name) {
+            return $scope.otherPlayers.filter(function (p) { return p.name === name })[0];
+        }
         $scope.init = function() {
             $game.init(function(data) {
                 $scope.$apply(function(scope) {
@@ -40,17 +43,25 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
             setHandler('activate', function() {
                 this.isCurrentPlayer = true;
                 this.canDraw = true;
+                
             });
-            setHandler('discard', function(index) {
+            setHandler('discard', function(index, currentPlayer) {
                 this.topCard = this.cards.splice(index, 1)[0];
                 this.isCurrentPlayer = false;
+                findOtherPlayerByName(currentPlayer).active = true;
             });
-            setHandler('move', function(top, player) {
+            setHandler('move', function(top, player, currentPlayer) {
                 if (top)
                     this.topCard = top;
                 this.canDraw = true;
-                this.canPass = false;
-                this.otherPlayers.filter(function(p) { return p.name === player })[0].cardsCount--;
+                this.canPass = false;;
+                var prevPlayer = findOtherPlayerByName(player);
+                if (prevPlayer) 
+                    prevPlayer.cardsCount--;
+                this.otherPlayers.forEach(function(p) { p.active = false; });
+                var current = findOtherPlayerByName(currentPlayer);
+                if (current)
+                    current.active = true;
             });
             setHandler('preLastDiscarded', function() {
                 $scope.canUno = true;
@@ -83,12 +94,13 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
                 $alert.danger('WRONG CARD!!!');
             });
             setHandler('cardsAdded', function(player, count) {
-                this.otherPlayers.filter(function(p) { return p.name == player })[0].cardsCount += count;
+                var p = this.otherPlayers.filter(function(p) { return p.name === player })[0];
+                if (p)
+                    p.cardsCount += count;
             });
         }
         $scope.move = function(index) {
             $game.move(index);
-            $scope.canDraw = false;
             $scope.canPass = false;
         };
         $scope.draw = function() {
@@ -196,11 +208,9 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
 //    newButton.disabled($('.card').eq(0).disabled());
 //}
 //$.connection.hub.start().done(function() {
-
 //    $('.card').click(function () {
 //        move($(this));
 //    });
-
 //    $('.btn-draw').click(function () {
 //        draw();
 //    });
@@ -231,7 +241,6 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
 //    $('.cards').children().disabled(true);
 //    game.server.pass();
 //}
-
 //function setTopCard(card) {
 //    var topCard = $('.top-card');
 //    addColorClass(topCard, card.color);

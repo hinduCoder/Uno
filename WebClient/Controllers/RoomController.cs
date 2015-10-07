@@ -24,8 +24,11 @@ namespace WebClient.Controllers
                 return Redirect("/");
             var lobby = Lobby.Instance;
             ViewBag.RoomContainer = lobby;
-            var room = lobby.GetPlayerByName(FormsAuthentication.Decrypt(cookie.Value).Name)?.Room;
+            var username = FormsAuthentication.Decrypt(cookie.Value).Name;
+            var currentUser = lobby.GetPlayerByName(username);
+            var room = currentUser?.Room;
             ViewBag.CanJoin = room == null || !room.IsFull;
+            ViewBag.CurrentUser = currentUser;
             return View();
         }
 

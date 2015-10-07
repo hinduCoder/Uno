@@ -24,13 +24,15 @@
     <div class="top-card {{topCard.color}}">
         {{topCard.content}}
     </div>
-    <button class="btn-draw btn btn-default" ng-disabled="!canDraw" ng-click="draw()">Draw</button>
-    <button class="btn-pass btn btn-default" ng-disabled="!canPass" ng-click="pass()">Pass</button>
-    <button class="btn-uno btn btn-default" ng-disabled="cards.length != 2" ng-click="uno()">Uno</button>
+    <div class="buttons">
+        <button class="btn-draw btn btn-default" ng-disabled="!(isCurrentPlayer && canDraw)" ng-click="draw()">Draw</button>
+        <button class="btn-pass btn btn-default" ng-disabled="!(isCurrentPlayer && canPass)" ng-click="pass()">Pass</button>
+        <button class="btn-uno btn btn-default" ng-disabled="!(isCurrentPlayer && cards.length == 2)" ng-click="uno()">Uno</button>
+    </div>
 
     <div class="other-players">
         <div class="other-player" ng-repeat="otherPlayer in otherPlayers">
-            <div>{{otherPlayer.name}}</div>
+            <div><span class="current-player-marker" ng-show="otherPlayer.active"></span>{{otherPlayer.name}}</div>
             <div>{{otherPlayer.cardsCount}}</div>
         </div>
     </div>

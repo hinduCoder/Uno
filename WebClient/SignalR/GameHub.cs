@@ -70,7 +70,7 @@ namespace WebClient.SignalR
             var gameSession = room.GameSession;
             try
             {
-                var currentPlayer = gameSession.CurrentPlayer;
+                var prevPlayer = gameSession.CurrentPlayer;
                 gameSession.Discard(index);
                 if (_finished)
                 {
@@ -78,9 +78,9 @@ namespace WebClient.SignalR
                     return;
                 }
                 var topCard = gameSession.DiscardPileTop;
-                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString()}, currentPlayer.Name);
-                Clients.Caller.discard(index);
-               ToClientWithName(gameSession.CurrentPlayer.Name).activate();
+                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString()}, prevPlayer.Name, gameSession.CurrentPlayer.Name);
+                Clients.Caller.discard(index, gameSession.CurrentPlayer.Name);
+                ToClientWithName(gameSession.CurrentPlayer.Name).activate();
             }
             catch (WrongCardException e)
             {

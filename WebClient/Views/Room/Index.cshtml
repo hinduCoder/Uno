@@ -23,6 +23,7 @@
 
 @{
     var rooms = ViewBag.RoomContainer.Rooms;
+    var currentPlayer = ViewBag.CurrentUser;
 }
 <div class="rooms">
     @for (int i = 0; i < rooms.Count; i++)
@@ -36,8 +37,8 @@
                     <p>@player.Name</p>
                 }
             </div>
-            <button class="btn-join btn btn-default" @Help.If(!ViewBag.CanJoin, "disabled")>Join</button>
-            @Html.RouteLink("Start", new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.CanStart, "disabled")}"})
+            <button class="btn-join btn btn-default" @Help.If(room.Players.Contains(currentPlayer) || room.IsFull, "disabled")>Join</button>
+            @Html.RouteLink("Start", new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.Players.Contains(currentPlayer) || !room.CanStart, "disabled")}"})
             <span>Places left: <span class="places-left">@(room.MaxPlayersCount - room.Players.Count)</span></span>
             
         </div>

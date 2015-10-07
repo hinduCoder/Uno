@@ -50,6 +50,8 @@ namespace WebClient.Controllers
         {
             using (var unoDb = new UnoDb())
             {
+                if (unoDb.Users.Any(u => u.Username == register.Username))
+                    return Error("There is exists user with the same username");
                 unoDb.Users.Add(new User
                 {
                     //Email = register.Email,

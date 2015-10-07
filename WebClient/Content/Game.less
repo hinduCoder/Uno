@@ -3,12 +3,18 @@
 @green: #60b417;
 @blue: #4953c2;
 @disabled-color: #808080;
-.cards, .buttons {
+.cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.buttons {
     text-align: center;
 }
 .card {
     color: white;
-    margin-left: 20px;
+    margin: 0 3px;
     @inner-padding: 15px;
     padding-top: @inner-padding;
     padding-bottom: @inner-padding;
@@ -41,7 +47,8 @@
     padding: 50px 10px;
     font-size: 4em;
     margin:auto;
-    width: auto;
+    border-radius: 15px;
+    max-width: 120px;
 }
 .other-players {
     display: flex;
@@ -49,6 +56,15 @@
     .other-player {
         text-align: center;
         font-size: 2em;
+        .current-player-marker {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 1px;
+            background-color: #5cb85c;
+            border-radius: 50%;
+        }
     }
 }
 
