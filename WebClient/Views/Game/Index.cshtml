@@ -8,8 +8,9 @@
 @section head {
     @Styles.Render("~/Content/Game.less")
 
-    @Scripts.Render("~/Scripts/angular.min.js")
-    <script src="~/Scripts/angular-animate.min.js"></script>
+    @Scripts.Render("~/Scripts/angular/angular.min.js")
+    <script src="~/Scripts/angular/angular-animate.min.js"></script>
+    <script src="~/Scripts/angular/angular-sanitize.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     @Scripts.Render("/signalr/hubs")
@@ -18,11 +19,12 @@
 }
 <div id="wrapper" ng-app="App" ng-controller="MainController" ng-init="init()">
     <div class="cards">
-            <button ng-repeat="card in cards" data-color="{{card.color}}" class="card btn btn-default {{card.color}}" ng-disabled="!isCurrentPlayer" ng-click="move($index)" >{{card.content}}</button>
+        <card ng-repeat="card in cards" color="{{card.color}}" type="{{card.type}}" ng-class="{disabled: !isCurrentPlayer}" ng-click="move($index)" content="{{card.content}}"></card>
     </div>
 
-    <div class="top-card {{topCard.color}}">
-        {{topCard.content}}
+    <div id="top-card-wrapper">
+         <card color="{{topCard.color}}" type="{{topCard.type}}" content="{{topCard.content}}">
+        </card>
     </div>
     <div class="buttons">
         <button class="btn-draw btn btn-default" ng-disabled="!(isCurrentPlayer && canDraw)" ng-click="draw()">Draw</button>
@@ -32,7 +34,8 @@
 
     <div class="other-players">
         <div class="other-player" ng-repeat="otherPlayer in otherPlayers">
-            <div><span class="current-player-marker" ng-show="otherPlayer.active"></span>{{otherPlayer.name}}</div>
+            <div><span class="current-player-marker" ng-show="otherPlayer.active"></span>{{otherPlayer.name}}
+            </div>
             <div>{{otherPlayer.cardsCount}}</div>
         </div>
     </div>
@@ -68,3 +71,38 @@
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" dismiss-on-timeout="{{alert.timeout}}" close="closeAlert($index)">{{alert.text}}</alert>
     </div>
 </div>
+
+<script id="reverse-template" type="text/ng-template">
+    <div class="reverse">
+        <div class="arrows">
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+        </div>
+    </div>
+</script>
+<!--///-->
+<script id="skip-template" type="text/ng-template">
+    <div class="skip"></div>
+</script>
+<!--////-->
+<script id="plus-two-template" type="text/ng-template">
+    <div class="plus-two"></div>
+</script>
+<!--///-->
+<script id="wild-template" type="text/ng-template">
+    <div class="wild">
+        <div class="segment yellow"></div>
+        <div class="segment green"></div>
+        <div class="segment blue"></div>
+        <div class="segment red"></div>
+    </div>
+</script>
+<!--///-->
+<script id="plus-four-template" type="text/ng-template">
+    <div class="plus-four">
+        <div class="card1"></div>
+        <div class="card2"></div>
+        <div class="card3"></div>
+        <div class="card4"></div>
+    </div>
+</script>

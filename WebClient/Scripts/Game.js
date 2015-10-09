@@ -18,7 +18,45 @@
             chooseColor: game.server.chooseColor 
         }
     });
-angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
+angular.module('Cards', ['ngSanitize'])
+    .directive('card', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/AngularTemplate/Index/card-template',
+            scope: {
+                type: '@',
+                number: '@content',
+                color: '@'
+            },
+            link: function(scope, element, attrs, controller) {
+                scope.color = scope.color || 'black';
+
+                function setContent() {
+                    if (scope.type)
+                        scope.content = $('#' + scope.type + '-template').html();
+                    else
+                        scope.content = scope.number;
+                    scope.smallContent = null;
+                    switch (scope.type) {
+                    case 'plus-two':
+                        scope.smallContent = '+2';
+                        break;
+                    case 'plus-four':
+                        scope.smallContent = '+4';
+                        break;
+                    }
+                    scope.smallContent = scope.smallContent || scope.content;
+                }
+
+                
+                scope.$watch('number', setContent);
+                scope.$watch('type', setContent);
+                setContent();
+            }
+        }
+    })
+    ;
+angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
     .controller('MainController', function($scope, $game, $modal, $alert) {
         var setHandler = function(name, fn) {
             $game.setHandler(name, function() {
@@ -99,7 +137,9 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate'])
                     p.cardsCount += count;
             });
         }
-        $scope.move = function(index) {
+        $scope.move = function (index) {
+            if (!$scope.isCurrentPlayer)
+                return;
             $game.move(index);
             $scope.canPass = false;
         };

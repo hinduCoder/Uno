@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Uno;
 using Uno.Log;
 using Uno.Model;
@@ -78,7 +80,7 @@ namespace WebClient.SignalR
                     return;
                 }
                 var topCard = gameSession.DiscardPileTop;
-                ToCurrentPlayerRoom().move(new { color = topCard.Color.ToString().ToLower(), content = topCard.ToString()}, prevPlayer.Name, gameSession.CurrentPlayer.Name);
+                ToCurrentPlayerRoom().move(SerializeCard(topCard), prevPlayer.Name, gameSession.CurrentPlayer.Name);
                 Clients.Caller.discard(index, gameSession.CurrentPlayer.Name);
                 ToClientWithName(gameSession.CurrentPlayer.Name).activate();
             }
@@ -135,9 +137,25 @@ namespace WebClient.SignalR
             return Clients.Clients(_lobby.GetPlayerByName(name).Room.Players.Select(p => p.ConnectionId).ToList());
         }
 
-        private object SerializeCard(Card card)
+        private object SerializeCard(Card card) //Refactor!
         {
-            return new {color = card.Color.ToString().ToLower(), content = card.ToString()};
+            String type;
+            switch (card.Type)
+            {
+                case CardType.Number:
+                    type = null;
+                    break;
+                case CardType.DrawTwo:
+                    type = "plus-two";
+                    break;
+                case CardType.WildDrawFour:
+                    type = "plus-four";
+                    break;
+                default:
+                    type = card.Type.ToString().ToLower();
+                    break;
+            }
+            return new {color = card.Color.ToString().ToLower(), content = card.ToString(), type = type};
         }
 
         private string GetCurrentUserName()

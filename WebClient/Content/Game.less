@@ -1,55 +1,27 @@
-﻿@red: #e40808;
+﻿@import "Cards.less";
+
+@red: #e40808;
 @yellow: #e5d135;
 @green: #60b417;
 @blue: #4953c2;
 @disabled-color: #808080;
-.cards {
+.cards, #top-card-wrapper {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    card.disabled {
+        opacity: 0.5;
+    }
 }
-
+#top-card-wrapper card {
+    border: 1px solid black;
+    border-radius: 10%;
+    padding: 2% 10%;
+}
 .buttons {
     text-align: center;
 }
-.card {
-    color: white;
-    margin: 0 3px;
-    @inner-padding: 15px;
-    padding-top: @inner-padding;
-    padding-bottom: @inner-padding;
-    &.red {
-        background: @red;
-    }
-    &.yellow {
-        background: @yellow;
-    }
-    &.green {
-        background: @green;
-    }
-    &.blue {
-        background: @blue;
-    }
-    &.black {
-        background: black;
-    }
-    &:disabled {
-        opacity: 0.3;
-    }
-    &:hover {
-        color: white;
-    }
-}
 
-.top-card {
-    .card();
-    text-align:center;
-    padding: 50px 10px;
-    font-size: 4em;
-    margin:auto;
-    border-radius: 15px;
-    max-width: 120px;
-}
 .other-players {
     display: flex;
     justify-content: space-around;
