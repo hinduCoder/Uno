@@ -72,6 +72,15 @@
     </div>
 </div>
 
+<script id="card-template" type="text/ng-template">
+    <div ng-class="color" class="card">
+        <div class="ellipse"></div>
+        <div ng-class="color" ng-bind-html="content" class="content"></div>
+        <div ng-class="color" ng-bind-html="smallContent" class="small-content"></div>
+        <div ng-class="color" ng-bind-html="smallContent" class="small-content-reverse"></div>
+    </div>
+</script>
+
 <script id="reverse-template" type="text/ng-template">
     <div class="reverse">
         <div class="arrows">

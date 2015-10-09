@@ -22,7 +22,7 @@ angular.module('Cards', ['ngSanitize'])
     .directive('card', function() {
         return {
             restrict: 'E',
-            templateUrl: '/AngularTemplate/Index/card-template',
+            template: $('#card-template').html(),
             scope: {
                 type: '@',
                 number: '@content',
