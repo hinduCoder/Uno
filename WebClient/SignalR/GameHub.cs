@@ -18,7 +18,7 @@ namespace WebClient.SignalR
     public class GameHub : Hub
     {
         private Lobby _lobby = Lobby.Instance;
-        private bool _finished;
+        private static bool _finished;
         private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
 
         public GameHub()

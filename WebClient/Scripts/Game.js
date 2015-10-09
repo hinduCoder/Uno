@@ -58,7 +58,7 @@ angular.module('Cards', ['ngSanitize'])
     ;
 angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
     .controller('MainController', function($scope, $game, $modal, $alert) {
-        var setHandler = function(name, fn) {
+        var on = function(name, fn) {
             $game.setHandler(name, function() {
                 var args = arguments;
                 $scope.$apply(function(scope) {
@@ -78,17 +78,17 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
                     scope.deck = data.deck;
                 });
             });
-            setHandler('activate', function() {
+            on('activate', function() {
                 this.isCurrentPlayer = true;
                 this.canDraw = true;
                 
             });
-            setHandler('discard', function(index, currentPlayer) {
+            on('discard', function(index, currentPlayer) {
                 this.topCard = this.cards.splice(index, 1)[0];
                 this.isCurrentPlayer = false;
                 findOtherPlayerByName(currentPlayer).active = true;
             });
-            setHandler('move', function(top, player, currentPlayer) {
+            on('move', function(top, player, currentPlayer) {
                 if (top)
                     this.topCard = top;
                 this.canDraw = true;
@@ -101,13 +101,13 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
                 if (current)
                     current.active = true;
             });
-            setHandler('preLastDiscarded', function() {
+            on('preLastDiscarded', function() {
                 $scope.canUno = true;
             });
-            setHandler('addCards', function(cards) {
+            on('addCards', function(cards) {
                 this.cards = this.cards.concat(cards);
             });
-            setHandler('chooseColor', function() {
+            on('chooseColor', function() {
                 var scope = this;
                 $modal.open({
                     animation: true,
@@ -118,20 +118,25 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
                     scope.topCard.color = color;
                 });
             });
-            setHandler('chosenColor', function(color) {
+            on('chosenColor', function(color) {
                 this.topCard.color = color;
             });
-            setHandler('finish', function(scores) {
+            on('finish', function (scores) {
+                this.cards = [];
                 $modal.open({
                     templateUrl: 'scoreModalTemplate',
                     controller: 'ScoreController',
                     resolve: { scores: function() { return scores; } }
                 });
             });
-            setHandler('wrongCard', function() {
+            on('newGame', function (top) {
+                this.otherPlayers.forEach(function(p) { p.cardsCount = 7 });
+                this.topCard = top;
+            })
+            on('wrongCard', function() {
                 $alert.danger('WRONG CARD!!!');
             });
-            setHandler('cardsAdded', function(player, count) {
+            on('cardsAdded', function(player, count) {
                 var p = this.otherPlayers.filter(function(p) { return p.name === player })[0];
                 if (p)
                     p.cardsCount += count;

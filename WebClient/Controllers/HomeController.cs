@@ -36,7 +36,7 @@ namespace WebClient.Controllers
 
                 var ticket = new FormsAuthenticationTicket(login.Username, true, 30);
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                Response.SetCookie(new HttpCookie("userid", encryptedTicket) {Expires = DateTime.Now.AddDays(1)});
+                Response.SetCookie(new HttpCookie("userid", encryptedTicket));
             }
             return RedirectToAction("Index", "Room");
         }
