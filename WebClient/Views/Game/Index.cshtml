@@ -27,9 +27,9 @@
         </card>
     </div>
     <div class="buttons">
-        <button class="btn-draw btn btn-default" ng-disabled="!(isCurrentPlayer && canDraw)" ng-click="draw()">Draw</button>
-        <button class="btn-pass btn btn-default" ng-disabled="!(isCurrentPlayer && canPass)" ng-click="pass()">Pass</button>
-        <button class="btn-uno btn btn-default" ng-disabled="!(isCurrentPlayer && cards.length == 2)" ng-click="uno()">Uno</button>
+        <button class="btn-draw btn btn-default" ng-disabled="!(isCurrentPlayer && canDraw)" ng-click="draw()">@LocalRes.Draw</button>
+        <button class="btn-pass btn btn-default" ng-disabled="!(isCurrentPlayer && canPass)" ng-click="pass()">@LocalRes.Pass</button>
+        <button class="btn-uno btn btn-default" ng-disabled="!(isCurrentPlayer && cards.length == 2)" ng-click="uno()">@LocalRes.Uno</button>
     </div>
 
     <div class="other-players">

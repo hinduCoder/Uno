@@ -14,9 +14,9 @@
         <div class="jumbotron room">
             <div class="players">
             </div>
-            <button class="btn-join btn btn-default">Join</button>
-            @Html.RouteLink("Start", new {action = "Start"}, new {@class = "btn-start btn btn-default disabled"})
-            <span>Places left: <span class="places-left">{{placesCount}}</span></span>
+            <button class="btn-join btn btn-default">@LocalRes.Join</button>
+            @Html.RouteLink(@LocalRes.Start, new {action = "Start"}, new {@class = "btn-start btn btn-default disabled"})
+            <span>(@LocalRes.PlacesLeft): <span class="places-left">{{placesCount}}</span></span>
         </div>
     </script>
 }
@@ -37,9 +37,9 @@
                     <p>@player.Name</p>
                 }
             </div>
-            <button class="btn-join btn btn-default" @Help.If(room.Players.Contains(currentPlayer) || room.IsFull, "disabled")>Join</button>
-            @Html.RouteLink("Start", new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.Players.Contains(currentPlayer) || !room.CanStart, "disabled")}"})
-            <span>Places left: <span class="places-left">@(room.MaxPlayersCount - room.Players.Count)</span></span>
+            <button class="btn-join btn btn-default" @Help.If(room.Players.Contains(currentPlayer) || room.IsFull, "disabled")>"@LocalRes.Join</button>
+            @Html.RouteLink(@LocalRes.Start, new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.Players.Contains(currentPlayer) || !room.CanStart, "disabled")}"})
+            <span>(@LocalRes.PlacesLeft): <span class="places-left">@(room.MaxPlayersCount - room.Players.Count)</span></span>
             
         </div>
 
@@ -48,7 +48,7 @@
 
 <!-- Button trigger modal -->
 <button type="button"  class="btn btn-default" data-toggle="modal" data-target="#myModal">
-    + Room
+    + @LocalRes.Room
 </button>
 
 <!-- Modal -->

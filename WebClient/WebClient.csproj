@@ -184,6 +184,15 @@
     <Content Include="Content\Game.less" />
     <Content Include="Content\Room.less" />
     <Content Include="Content\Cards.less" />
+    <EmbeddedResource Include="App_LocalResources\LocalRes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_LocalResources\LocalRes.ru.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalRes.ru.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\unowebapp.pubxml" />
     <Content Include="Scripts\angular\angular-animate.min.js.map" />
     <Content Include="Scripts\angular\angular-aria.min.js.map" />
@@ -928,6 +937,16 @@
     <Content Include="_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_LocalResources\LocalRes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalRes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_LocalResources\LocalRes.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalRes.ru.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SignarRStartup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
