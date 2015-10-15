@@ -1,23 +1,14 @@
 ﻿@using System.Web.Optimization
-@using System.Web.Security
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>@Page.Title</title>
-    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
-    @Styles.Render("~/Content/bootstrap.min.css")
-    @Styles.Render("~/Content/bootstrap-theme.min.css")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
-    @RenderSection("head", required: true)
+    <title>Uno | @Page.Title</title>
+    @Scripts.Render("~/js/basic")
+    @Styles.Render("~/css/bootstrap")
+    @RenderSection("head", required: false)
 </head>
 <body>
-@{
-    var coockie = Request.Cookies["userid"];
-}
-@*<header class="page-header">
-    @(coockie != null ? FormsAuthentication.Decrypt(coockie.Value).Name : "Welcome")
-</header>*@
 @RenderBody()
 </body>
 </html>

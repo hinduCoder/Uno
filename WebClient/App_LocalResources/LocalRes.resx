@@ -120,6 +120,9 @@
   <data name="Draw" xml:space="preserve">
     <value>Draw</value>
   </data>
+  <data name="Game" xml:space="preserve">
+    <value>Game</value>
+  </data>
   <data name="Join" xml:space="preserve">
     <value>Join</value>
   </data>
@@ -138,8 +141,14 @@
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
   <data name="Room" xml:space="preserve">
     <value>Room</value>
+  </data>
+  <data name="Rooms" xml:space="preserve">
+    <value>Rooms</value>
   </data>
   <data name="SignIn" xml:space="preserve">
     <value>Sign In</value>
@@ -152,6 +161,9 @@
   </data>
   <data name="Uno" xml:space="preserve">
     <value>Uno</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
   </data>
   <data name="WrongCard" xml:space="preserve">
     <value>Wrong card</value>

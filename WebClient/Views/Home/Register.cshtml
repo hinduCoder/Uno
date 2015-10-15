@@ -1,20 +1,14 @@
 ﻿@using System.Web.Optimization
 @model global::WebClient.RegisterViewModel
 @{
-    Layout = null;
+    Layout = "~/_Layout.cshtml";
+    Page.Title = LocalRes.Registration;
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Register</title>
-    @Styles.Render("~/Content/bootstrap.min.css")
-    @Scripts.Render("~/Scripts/jquery-2.1.4.min.js")
+@section head {
     @Scripts.Render("~/Scripts/Register.js")
-</head>
-<body>
+}
+
 <div>
     @using (@Html.BeginForm("SignUp", "Home", FormMethod.Post))
     {
@@ -38,5 +32,3 @@
         </div>
     }
 </div>
-</body>
-</html>

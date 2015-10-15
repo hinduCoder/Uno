@@ -1,15 +1,15 @@
 ﻿@using System.Web.Optimization
 @{
     Layout = "~/_Layout.cshtml";
-    Page.Title = "Rooms";
+    Page.Title = LocalRes.Rooms;
 }
 
 @section head {
-    @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
+    @Scripts.Render("~/js/signalr")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/Room.js")
-    @Scripts.Render("~/Scripts/mustache.min.js")
     @Styles.Render("~/Content/Room.less")
+
     <script id="room-template" type="x-tmpl-mustache">
         <div class="jumbotron room">
             <div class="players">

@@ -1,21 +1,15 @@
 ﻿@using System.Web.Optimization
 @{
     Layout = "~/_Layout.cshtml";
-    var gameSession = Model;
-    var player = ViewBag.Player;
-    Page.Title = "Uno";
+    Page.Title = LocalRes.Game;
 }
 @section head {
     @Styles.Render("~/Content/Game.less")
 
-    @Scripts.Render("~/Scripts/angular/angular.min.js")
-    <script src="~/Scripts/angular/angular-animate.min.js"></script>
-    <script src="~/Scripts/angular/angular-sanitize.min.js"></script>
-    <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
-    @Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
-    @Scripts.Render("/signalr/hubs")
+    @Scripts.Render("~/js/angular")
+    @Scripts.Render("~/js/signalr")
+    <script src="/signalr/hubs"></script>
     @Scripts.Render("~/Scripts/Game.js")
-    @Scripts.Render("~/Scripts/mustache.min.js")
 }
 <div id="wrapper" ng-app="App" ng-controller="MainController" ng-init="init()">
     <div class="cards">
