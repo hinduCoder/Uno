@@ -43,7 +43,7 @@ namespace WebClient.Controllers
                 if (!user.Password.Equals(hashedPasswordString, StringComparison.OrdinalIgnoreCase))
                     return Error("Password wrong");
 
-                var ticket = new FormsAuthenticationTicket(login.Username, true, 30);
+                var ticket = new FormsAuthenticationTicket(login.Username, true, (int)TimeSpan.FromDays(7).TotalMinutes);
                 var encryptedTicket = FormsAuthentication.Encrypt(ticket);
                 Response.SetCookie(new HttpCookie("userid", encryptedTicket));
             }
