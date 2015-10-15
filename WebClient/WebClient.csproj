@@ -925,7 +925,6 @@
     <Content Include="Scripts\lib\i18n\angular-locale_zu.js" />
     <Content Include="Scripts\lib\jquery-2.1.4.js" />
     <Content Include="Scripts\lib\jquery-2.1.4.min.js" />
-    <Content Include="Scripts\lib\Index.js" />
     <Content Include="Scripts\lib\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\lib\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\lib\mustache.min.js" />
