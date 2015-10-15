@@ -37,7 +37,7 @@
                     <p>@player.Name</p>
                 }
             </div>
-            <button class="btn-join btn btn-default" @Help.If(room.Players.Contains(currentPlayer) || room.IsFull, "disabled")>"@LocalRes.Join</button>
+            <button class="btn-join btn btn-default" @Help.If(room.Players.Contains(currentPlayer) || room.IsFull, "disabled")>@LocalRes.Join</button>
             @Html.RouteLink(@LocalRes.Start, new {action = "Start"}, new {@class = $"btn-start btn btn-default {Help.If(!room.Players.Contains(currentPlayer) || !room.CanStart, "disabled")}"})
             <span>(@LocalRes.PlacesLeft): <span class="places-left">@(room.MaxPlayersCount - room.Players.Count)</span></span>
             

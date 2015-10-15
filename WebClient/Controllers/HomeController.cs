@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -14,14 +16,21 @@ namespace WebClient.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            SetLanguage();
             var cookie = Request.Cookies["userid"];
             if (cookie != null && (!FormsAuthentication.Decrypt(cookie.Value)?.Expired ?? false))
             {
                 return RedirectToAction("Index", "Room");
             }
             return View();
-
         }
+
+        private void SetLanguage()
+        {
+            var langs = Request.UserLanguages;
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(langs.Length > 0 ? langs[0] : "en");
+        }
+
         [System.Web.Mvc.HttpPost]
         public ActionResult LogIn(LoginViewModel login)
         { 
