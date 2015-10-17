@@ -1,4 +1,4 @@
-﻿namespace WebClient
+﻿namespace WebClient.Models
 {
     public class RegisterViewModel
     {

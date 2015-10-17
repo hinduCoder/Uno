@@ -8,6 +8,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
 using PasswordHash;
+using WebClient.DataAccess;
+using WebClient.Models;
 
 namespace WebClient.Controllers
 {
@@ -34,7 +36,7 @@ namespace WebClient.Controllers
         [System.Web.Mvc.HttpPost]
         public ActionResult LogIn(LoginViewModel login)
         { 
-            using (var unoDb = new UnoDb())
+            using (var unoDb = new UnoDbContext())
             {
                 var user = unoDb.Users.SingleOrDefault(u => u.Username == login.Username);
                 if (user == null)
@@ -57,7 +59,7 @@ namespace WebClient.Controllers
         [System.Web.Mvc.HttpPost]
         public ActionResult SignUp(RegisterViewModel register)
         {
-            using (var unoDb = new UnoDb())
+            using (var unoDb = new UnoDbContext())
             {
                 if (unoDb.Users.Any(u => u.Username == register.Username))
                     return Error("There is exists user with the same username");
@@ -74,7 +76,7 @@ namespace WebClient.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult IsUsernameFree([FromUri] string username)
         {
-            using (var unoDb = new UnoDb())
+            using (var unoDb = new UnoDbContext())
             {
                 var all = unoDb.Users.All(u => u.Username != username);
                 return Json(new {response = all}, JsonRequestBehavior.AllowGet);

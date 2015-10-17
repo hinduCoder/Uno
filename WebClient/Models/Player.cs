@@ -1,8 +1,4 @@
-using System.IO;
-using System.Net.WebSockets;
-using System.Security.Principal;
-
-namespace WebClient.Controllers
+namespace WebClient.Models
 {
     public class Player 
     {
@@ -17,8 +13,5 @@ namespace WebClient.Controllers
         {
             Name = name;
         }
-
-       
     }
-
 }

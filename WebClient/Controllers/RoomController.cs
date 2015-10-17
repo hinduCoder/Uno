@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using System.Web.WebSockets;
 using Newtonsoft.Json;
+using WebClient.Models;
 using WebGrease.Css.Extensions;
 
 namespace WebClient.Controllers
@@ -17,12 +18,11 @@ namespace WebClient.Controllers
     public class RoomController : Controller
     {
         // GET: Room
-        public ActionResult Index()
+        public ActionResult Index(Lobby lobby)
         {
             var cookie = Request.Cookies["userid"];
             if (cookie == null)
                 return Redirect("/");
-            var lobby = Lobby.Instance;
             ViewBag.RoomContainer = lobby;
             var username = FormsAuthentication.Decrypt(cookie.Value).Name;
             var currentUser = lobby.GetPlayerByName(username);
@@ -34,8 +34,7 @@ namespace WebClient.Controllers
 
         public ActionResult Start()
         {
-            //return Redirect($"/Game/Index/{id}");
-            return Redirect($"/Game/");
+            return RedirectToRoute(new {controller = "Game"});
         }
     }
 

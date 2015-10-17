@@ -6,8 +6,8 @@
                 game.client[name] = fn;
             },
             init: function(callback) {
-                $.connection.hub.start();
                 game.client.init = callback;
+                $.connection.hub.start();
             },
             move: function(index) {
                 game.server.move(index);

@@ -1,15 +1,17 @@
-namespace WebClient
+using System.Data.Entity;
+
+namespace WebClient.DataAccess
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    public partial class UnoDb : DbContext
+    public partial class UnoDbContext : DbContext
     {
-        public UnoDb()
-            : base("name=UnoDb")
+        public UnoDbContext()
+#if DEBUG
+            : base("name=UnoDbContextLocal")
+#else
+            : base("name=UnoDbContext")
+#endif
         {
-            Database.SetInitializer(new CreateDatabaseIfNotExists<UnoDb>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<UnoDbContext>());
         }
 
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }

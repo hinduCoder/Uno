@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Uno;
-using WebClient.Controllers;
 
-namespace WebClient
+namespace WebClient.Models
 {
     public class Room
     {
@@ -44,13 +43,9 @@ namespace WebClient
         }
 
         public IReadOnlyList<Player> Players => _players;
-
         public bool CanStart { get; private set; }
-
         public int MaxPlayersCount { get; set; } = 2;
-
         public bool IsFull => _players.Count == MaxPlayersCount;
-
         public GameSession GameSession { get; set; }
     }
 }

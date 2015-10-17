@@ -3,29 +3,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Uno;
 using Uno.Log;
 using Uno.Model;
-using WebClient.Controllers;
 using WebClient.Exceptions;
+using WebClient.Models;
 using WebGrease.Css.Extensions;
-using Player = WebClient.Controllers.Player;
+using Player = WebClient.Models.Player;
 
 namespace WebClient.SignalR
 {
     public class GameHub : Hub
     {
-        private Lobby _lobby = Lobby.Instance;
+        private Lobby _lobby;
         private static bool _finished;
-        private Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
+        internal Player CurrentPlayer => _lobby.GetPlayerByName(GetCurrentUserName());
 
-        public GameHub()
+        public GameHub(Lobby lobby)
         {
+            _lobby = lobby;
             Log.Loged = LogOnLoged;
         }
 
+        #region Event Handlers
         private void LogOnLoged(object sender, LogEventArgs e)
         {
             ToRoomOfPlayerWithName(e.Entry.Player.Name).log(e.Entry.Description);
@@ -47,11 +47,10 @@ namespace WebClient.SignalR
         {
             ToClientWithName(e.Player.Name).chooseColor();
         }
-
+#endregion
         private void GameSessionOnGameFinished(object sender, GameFinishedEventArgs e)
         {
             var winner = _lobby.GetPlayerByName(e.Winner.Name);
-            //Clients.Client(winner.ConnectionId).win();
             Clients.Clients(winner.Room.Players.Select(p => p.ConnectionId).ToList())
                 .finish(winner.Room.GameSession.Players.OrderBy(p => p.Score).Select(p => new {player = p.Name, score = p.Score}));
             _finished = true;
@@ -66,10 +65,9 @@ namespace WebClient.SignalR
             ToClientWithName(gameSession.CurrentPlayer.Name).activate();
         }
 
-        public void Move(int index)
+        public virtual void Move(int index)
         {
-            var room = CurrentPlayer.Room;
-            var gameSession = room.GameSession;
+            var gameSession = CurrentPlayer.Room.GameSession;
             try
             {
                 var prevPlayer = gameSession.CurrentPlayer;
@@ -90,16 +88,15 @@ namespace WebClient.SignalR
             }
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
-            var room = CurrentPlayer.Room;
-            var gameSession = room.GameSession;
+            var gameSession = CurrentPlayer.Room.GameSession;
             var currentPlayer = gameSession.CurrentPlayer;
             gameSession.Draw();
             Clients.Caller.draw(SerializeCard(currentPlayer.Cards.Last()));
         }
 
-        public void Pass()
+        public virtual void Pass()
         {
             var room = CurrentPlayer.Room;
             var gameSession = room.GameSession;
@@ -115,7 +112,7 @@ namespace WebClient.SignalR
             ToCurrentPlayerRoom().chosenColor(color);
         }
 
-        public void Uno()
+        public virtual void Uno()
         {
             CurrentPlayer.Room.GameSession.Uno();
         }
@@ -165,7 +162,7 @@ namespace WebClient.SignalR
                 return null;
             return FormsAuthentication.Decrypt(cookie.Value).Name;
         }
-
+#region Connection/Disconnection
         public override Task OnDisconnected(bool stopCalled)
         {
             return Task.Run(() =>
@@ -231,5 +228,6 @@ namespace WebClient.SignalR
         {
             return ConnectTask();
         }
+#endregion
     }
 }

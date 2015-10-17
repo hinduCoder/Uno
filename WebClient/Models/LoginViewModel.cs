@@ -1,4 +1,4 @@
-﻿namespace WebClient.Controllers
+﻿namespace WebClient.Models
 {
     public class LoginViewModel
     {

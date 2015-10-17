@@ -1,3 +1,5 @@
+using WebClient.DataAccess;
+
 namespace WebClient.Migrations
 {
     using System;
@@ -5,14 +7,14 @@ namespace WebClient.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<WebClient.UnoDb>
+    internal sealed class Configuration : DbMigrationsConfiguration<UnoDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(WebClient.UnoDb context)
+        protected override void Seed(UnoDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

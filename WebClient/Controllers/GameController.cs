@@ -2,19 +2,19 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using WebClient.Models;
 
 namespace WebClient.Controllers
 {
     public class GameController : Controller
     {
         // GET: Game
-        public ActionResult Index()
+        public ActionResult Index(Lobby lobby)
         {
             var cookie = Request.Cookies["userid"];
             if (cookie == null)
                 return Redirect("/");
             var userName = FormsAuthentication.Decrypt(cookie.Value).Name;
-            var lobby = Lobby.Instance;
             var currentPlayer = lobby.GetPlayerByName(userName);
             var room = currentPlayer?.Room;
             if (room == null)

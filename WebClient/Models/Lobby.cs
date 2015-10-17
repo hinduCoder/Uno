@@ -1,15 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WebClient.Controllers
+namespace WebClient.Models
 {
-    public class Lobby
+    public interface ILobby
     {
-        private static Lobby _instance;
-        public static Lobby Instance => _instance ?? (_instance = new Lobby());
+        void AddRoom(int playersCount = 2);
+        void AddPlayer(Player player);
+        List<Room> Rooms { get; }
+        List<Player> AllPlayers { get; }
+        void RemovePlayer(string name);
+        Player GetPlayerByName(string name);
+    }
+
+    public class Lobby : ILobby
+    {
         private List<Room> _rooms = new List<Room> {new Room()}; 
         private List<Player> _allPlayers = new List<Player>();
-        private Lobby()
+        public Lobby()
         {
         }
 

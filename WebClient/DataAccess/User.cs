@@ -1,4 +1,4 @@
-namespace WebClient
+namespace WebClient.DataAccess
 {
     using System;
     using System.Collections.Generic;

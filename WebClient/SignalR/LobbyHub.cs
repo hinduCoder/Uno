@@ -6,12 +6,18 @@ using System.Web.Security;
 using dotless.Core.Parser.Infrastructure;
 using Microsoft.AspNet.SignalR;
 using WebClient.Controllers;
+using WebClient.Models;
 
 namespace WebClient.SignalR
 {
     public class LobbyHub : Hub
     {
-        private readonly Lobby _lobby = Lobby.Instance;
+        private readonly Lobby _lobby;
+
+        public LobbyHub(Lobby lobby)
+        {
+            _lobby = lobby;
+        }
 
         public void AddPlayerToRoom(int roomIndex)
         {
@@ -38,8 +44,7 @@ namespace WebClient.SignalR
                 if (newPlayerName == null)
                     return;
                 var newPlayer = new Player(newPlayerName) {ConnectionId = Context.ConnectionId};
-                var lobby = Lobby.Instance;
-                lobby.AddPlayer(newPlayer);
+                _lobby.AddPlayer(newPlayer);
             });
         }
 
