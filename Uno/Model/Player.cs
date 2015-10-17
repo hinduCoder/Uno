@@ -6,20 +6,11 @@ namespace Uno.Model
 {
     public class Player
     {
-        private List<Card> _cards = new List<Card>();
-        public string Name { get; private set; }
-        private EventHandler<CardsAddedEventArgs> _cardsAdded;
+        private readonly List<Card> _cards = new List<Card>();
+        public string Name { get; }
         private int _score;
 
-        public event EventHandler<CardsAddedEventArgs> CardsAdded
-        {
-            add
-            {
-                if (_cardsAdded == null)
-                    _cardsAdded = value;
-            }
-            remove { _cardsAdded = null; }
-        }
+        public readonly OneSubscriberEvent<CardsAddedEventArgs> CardsAdded = new OneSubscriberEvent<CardsAddedEventArgs>();
 
         public Player(string name)
         {
@@ -29,7 +20,7 @@ namespace Uno.Model
         internal void AddCards(params Card[] cards)
         {
             _cards.AddRange(cards);
-            _cardsAdded?.Invoke(this, new CardsAddedEventArgs(this, cards));
+            CardsAdded.Invoke(this, new CardsAddedEventArgs(this, cards));
         }
 
         internal void AddCards(IEnumerable<Card> cards)

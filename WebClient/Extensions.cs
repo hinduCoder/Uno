@@ -1,6 +1,4 @@
-﻿using System.Web.Mvc;
-
-namespace System.Web.Mvc.Html
+﻿namespace System.Web.Mvc.Html
 {
     public static class Help
     {

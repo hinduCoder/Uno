@@ -152,7 +152,7 @@ namespace WebClient.SignalR
                     type = card.Type.ToString().ToLower();
                     break;
             }
-            return new {color = card.Color.ToString().ToLower(), content = card.ToString(), type = type};
+            return new {color = card.Color.ToString().ToLower(), content = card.ToString(), type};
         }
 
         private string GetCurrentUserName()
@@ -175,9 +175,6 @@ namespace WebClient.SignalR
                     return;
                 player.ConnectionId = null;
                 var gameSession = player.Room.GameSession;
-                gameSession.WildCardDiscarded -= OnWildCardDiscarded;
-                gameSession.PreLastCardDiscarded -= GameSessionOnPreLastCardDiscarded;
-                gameSession.Players.ForEach(p => p.CardsAdded -= OnCardsAdded);
             });
         }
 
@@ -199,11 +196,11 @@ namespace WebClient.SignalR
                 player.ConnectionId =
                     Context.ConnectionId;
                 var gameSession = player.Room.GameSession;
-                gameSession.WildCardDiscarded += OnWildCardDiscarded;
-                gameSession.PreLastCardDiscarded += GameSessionOnPreLastCardDiscarded;
-                gameSession.GameFinished += GameSessionOnGameFinished;
-                gameSession.NewGameStarted = NewGameStarted;
-                gameSession.Players.ForEach(p => p.CardsAdded += OnCardsAdded);
+                gameSession.WildCardDiscarded.Subscribe(OnWildCardDiscarded);
+                gameSession.PreLastCardDiscarded.Subscribe(GameSessionOnPreLastCardDiscarded);
+                gameSession.GameFinished.Subscribe(GameSessionOnGameFinished);
+                gameSession.NewGameStarted.Subscribe(NewGameStarted);
+                gameSession.Players.ForEach(p => p.CardsAdded.Subscribe(OnCardsAdded));
                 InitializeClient(player);
             });
         }

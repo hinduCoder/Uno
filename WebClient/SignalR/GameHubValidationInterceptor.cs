@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Web;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 
 namespace WebClient.SignalR
 {

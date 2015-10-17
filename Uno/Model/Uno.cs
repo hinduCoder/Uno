@@ -29,7 +29,7 @@ namespace Uno.Model
 
         internal List<Card> DrawCards(int count)
         {
-            List<Card> result = null;
+            List<Card> result;
             if (_cards.Count < count)
             {
                 result = _cards.ToList();

@@ -1,11 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using System.Net.Cache;
 using System.Threading.Tasks;
 using System.Web.Security;
-using dotless.Core.Parser.Infrastructure;
 using Microsoft.AspNet.SignalR;
-using WebClient.Controllers;
 using WebClient.Models;
 
 namespace WebClient.SignalR

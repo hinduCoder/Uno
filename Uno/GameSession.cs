@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Uno.Log;
@@ -14,40 +13,12 @@ namespace Uno
         bool _reverse;
         bool _unoSaid;
         Log.Log _log = new Log.Log();
-        #region Events
-        private EventHandler<WildCardDiscardedEventArgs> _wildCardEvent;
-        public event EventHandler<WildCardDiscardedEventArgs> WildCardDiscarded
-        {
-            add
-            {
-                if (_wildCardEvent == null)
-                    _wildCardEvent = value;
-            }
-            remove { _wildCardEvent = null; }
-        }
-        EventHandler<GameFinishedEventArgs> _gameFinishedEvent;
-        public event EventHandler<GameFinishedEventArgs> GameFinished
-        {
-            add
-            {
-                if (_gameFinishedEvent == null)
-                    _gameFinishedEvent = value;
-            }
-            remove { _gameFinishedEvent = null; }
-        }
+#region Events
 
-        private EventHandler<PreLastCardDiscardedEventArgs> _preLastCardDiscarded;
-        public event EventHandler<PreLastCardDiscardedEventArgs> PreLastCardDiscarded
-        {
-            add
-            {
-                if (_preLastCardDiscarded == null)
-                    _preLastCardDiscarded = value;
-            }
-            remove { _preLastCardDiscarded = null; }
-        }
-
-        public EventHandler NewGameStarted;
+        public readonly OneSubscriberEvent<WildCardDiscardedEventArgs> WildCardDiscarded = new OneSubscriberEvent<WildCardDiscardedEventArgs>();
+        public readonly OneSubscriberEvent<GameFinishedEventArgs> GameFinished = new OneSubscriberEvent<GameFinishedEventArgs>();
+        public readonly OneSubscriberEvent<PreLastCardDiscardedEventArgs> PreLastCardDiscarded = new OneSubscriberEvent<PreLastCardDiscardedEventArgs>();
+        public readonly OneSubscriberEvent NewGameStarted = new OneSubscriberEvent();
 #endregion
         public GameSession(params string[] players)
         {
@@ -60,7 +31,7 @@ namespace Uno
             if (e.SpecialCardType == CardType.Wild || e.SpecialCardType == CardType.WildDrawFour)
             {
                 var wildCardDiscardedEventArgs = new WildCardDiscardedEventArgs(CurrentPlayer);
-                _wildCardEvent?.Invoke(this, wildCardDiscardedEventArgs);
+                WildCardDiscarded.Invoke(this, wildCardDiscardedEventArgs);
                 chosenColor = wildCardDiscardedEventArgs.Color;
             }
             switch (e.SpecialCardType)
@@ -101,13 +72,13 @@ namespace Uno
                 cardToDiscard = CurrentPlayer.Discard(index);
                 _uno.Discard(cardToDiscard);
             }
-            catch (WrongCardException e)
+            catch (WrongCardException)
             {
                 CurrentPlayer.UndoDiscard(index, cardToDiscard);
                 throw;
             }
             if (CurrentPlayer.Cards.Count == 2)
-                _preLastCardDiscarded?.Invoke(this, new PreLastCardDiscardedEventArgs(CurrentPlayer));
+                PreLastCardDiscarded.Invoke(this, new PreLastCardDiscardedEventArgs(CurrentPlayer));
             _log.AddEntry(new PlayerMovedEntry(CurrentPlayer, cardToDiscard));
             NextPlayer();
             _unoSaid = false;
@@ -126,7 +97,8 @@ namespace Uno
             CurrentPlayer.AddCards(_uno.DrawCard());
             _log.AddEntry(new PlayerDrawnCardsEntry(CurrentPlayer));
         }
-        public void NextPlayer()
+
+        private void NextPlayer()
         {
             if (!CurrentPlayer.CardsLeft)
             {
@@ -148,11 +120,11 @@ namespace Uno
         private void FinishGame()
         {
             _players.ForEach(p => p.CalculateScore());
-            _gameFinishedEvent?.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
+            GameFinished.Invoke(this, new GameFinishedEventArgs(CurrentPlayer));
             _uno.Reset();
             _players.ForEach(p => p.Reset());
             Deal();
-            NewGameStarted?.Invoke(this, EventArgs.Empty);
+            NewGameStarted.Invoke(this);
         }
 
         #region Properties

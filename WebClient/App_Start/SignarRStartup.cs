@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Castle.MicroKernel;
-using Castle.Windsor;
+﻿using Castle.Windsor;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin;
 using Owin;
 using WebClient;
-using WebClient.SignalR;
 
 [assembly:OwinStartup(typeof(SignarRStartup))]
 namespace WebClient
