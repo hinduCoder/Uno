@@ -12,7 +12,8 @@ namespace WebClient
         {
             container.Register(Component.For<GameHub>().LifestyleTransient().Interceptors(typeof (GameHubValidationInterceptor)),
                 Component.For<LobbyHub>().LifestyleTransient(),
-                Component.For<GameHubValidationInterceptor>());
+                Component.For<GameHubValidationInterceptor>(),
+                Classes.FromThisAssembly().Where(t => t.Name.EndsWith("ViewModel")));
         }
     }
 
