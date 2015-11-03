@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\WrongCardException.cs" />
-    <Compile Include="IGameClient.cs" />
     <Compile Include="Model\Card.cs" />
     <Compile Include="Model\CardColor.cs" />
     <Compile Include="Events\CardsAddedEventArgs.cs" />
