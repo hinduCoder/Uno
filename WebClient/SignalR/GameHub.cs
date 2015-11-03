@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Web.Security;
 using Microsoft.AspNet.SignalR;
 using Uno;
-using Uno.Log;
 using Uno.Model;
 using WebClient.Exceptions;
 using WebClient.Models;
@@ -22,14 +21,9 @@ namespace WebClient.SignalR
         public GameHub(Lobby lobby)
         {
             _lobby = lobby;
-            Log.Loged = LogOnLoged;
         }
 
         #region Event Handlers
-        private void LogOnLoged(object sender, LogEventArgs e)
-        {
-            ToRoomOfPlayerWithName(e.Entry.Player.Name).log(e.Entry.Description);
-        }
 
         private void OnCardsAdded(object sender, CardsAddedEventArgs e)
         {

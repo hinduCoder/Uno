@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Uno.Log;
 using Uno.Model;
 using WebClient.Exceptions;
 namespace Uno
@@ -12,7 +11,6 @@ namespace Uno
         int _currentPlayerIndex;
         bool _reverse;
         bool _unoSaid;
-        Log.Log _log = new Log.Log();
 #region Events
 
         public readonly OneSubscriberEvent<WildCardDiscardedEventArgs> WildCardDiscarded = new OneSubscriberEvent<WildCardDiscardedEventArgs>();
@@ -41,7 +39,6 @@ namespace Uno
                 {
                     NextPlayer();
                     CurrentPlayer.AddCards(_uno.DrawCards(2));
-                    _log.AddEntry(new PlayerDrawnCardsEntry(CurrentPlayer, 2));
                     break;
                 }
                 case CardType.Skip: NextPlayer(); break;
@@ -51,7 +48,6 @@ namespace Uno
                     e.ChoosenColor = chosenColor;
                     NextPlayer();
                     CurrentPlayer.AddCards(_uno.DrawCards(4));
-                    _log.AddEntry(new PlayerDrawnCardsEntry(CurrentPlayer, 4));
                     break;
                 }
             }
@@ -79,7 +75,6 @@ namespace Uno
             }
             if (CurrentPlayer.Cards.Count == 2)
                 PreLastCardDiscarded.Invoke(this, new PreLastCardDiscardedEventArgs(CurrentPlayer));
-            _log.AddEntry(new PlayerMovedEntry(CurrentPlayer, cardToDiscard));
             NextPlayer();
             _unoSaid = false;
         }
@@ -95,7 +90,6 @@ namespace Uno
         public void Draw()
         {
             CurrentPlayer.AddCards(_uno.DrawCard());
-            _log.AddEntry(new PlayerDrawnCardsEntry(CurrentPlayer));
         }
 
         private void NextPlayer()
@@ -108,7 +102,6 @@ namespace Uno
             if (CurrentPlayer.Cards.Count == 1 && !_unoSaid)
             {
                 CurrentPlayer.AddCards(_uno.DrawCards(2));
-                _log.AddEntry(new PlayerDrawnCardsEntry(CurrentPlayer, 2));
             }
 
             _currentPlayerIndex += _reverse ? -1 : 1;
@@ -133,7 +126,6 @@ namespace Uno
         public Model.Uno Game => _uno;
         public IReadOnlyList<Player> Players => _players;
         public Card DiscardPileTop => Game.DiscardPileTop;
-        public Log.Log Log => _log;
 
         #endregion
 
