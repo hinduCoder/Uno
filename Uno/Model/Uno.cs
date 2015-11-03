@@ -9,6 +9,8 @@ namespace Uno.Model
     {
         readonly List<Card> _cards = new List<Card>(108);
         readonly List<Card> _discardPile = new List<Card>();
+        readonly Random _random = new Random();
+
         public Uno()
         {
             Reset();
@@ -24,6 +26,12 @@ namespace Uno.Model
 
         internal void Start()
         {
+            if (_cards[0].Type == CardType.WildDrawFour)
+            {
+                var card = _cards[0];
+                _cards.RemoveAt(0);
+                _cards.Insert(_random.Next(1, _cards.Count), card);
+            }
             Discard(DrawCard());
         }
 
@@ -44,8 +52,8 @@ namespace Uno.Model
             }
             else
             {
-                result = _cards.Where((e, i) => i >= _cards.Count - count).ToList();
-                _cards.RemoveRange(_cards.Count - count, count);
+                result = _cards.Take(count).ToList();
+                _cards.RemoveRange(0, count);
             }
             return result;
         }
@@ -107,10 +115,9 @@ namespace Uno.Model
         }
         private void Shuffle()
         {
-            var random = new Random();
             for (int i = _cards.Count - 1; i >= 1; i--)
             {
-                var j = random.Next(i + 1);
+                var j = _random.Next(i + 1);
                 var temp = _cards[j];
                 _cards[j] = _cards[i];
                 _cards[i] = temp;

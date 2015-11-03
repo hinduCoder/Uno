@@ -988,7 +988,6 @@
     <Compile Include="SignalR\GameHub.cs" />
     <Compile Include="DataAccess\UnoDbContext.cs" />
     <Compile Include="DataAccess\User.cs" />
-    <Compile Include="Tests\Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
