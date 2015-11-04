@@ -69,6 +69,16 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
         var findOtherPlayerByName = function (name) {
             return $scope.otherPlayers.filter(function (p) { return p.name === name })[0];
         }
+        var openChooseColorModal = function() {
+            $modal.open({
+                animation: true,
+                templateUrl: 'chooseColorModalTemplate',
+                controller: 'ChooseColorController'
+            }).result.then(function (color) {
+                $game.chooseColor(color);
+                $scope.topCard.color = color;
+            });
+        }
         $scope.init = function() {
             $game.init(function(data) {
                 $scope.$apply(function(scope) {
@@ -109,14 +119,7 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
             });
             on('chooseColor', function() {
                 var scope = this;
-                $modal.open({
-                    animation: true,
-                    templateUrl: 'chooseColorModalTemplate',
-                    controller: 'ChooseColorController'
-                }).result.then(function(color) {
-                    $game.chooseColor(color);
-                    scope.topCard.color = color;
-                });
+                openChooseColorModal();
             });
             on('chosenColor', function(color) {
                 this.topCard.color = color;
@@ -161,6 +164,12 @@ angular.module('App', ['Game', 'ui.bootstrap', 'ngAnimate', 'Cards'])
             $game.uno();
             $scope.canUno = false;
         }
+        $scope.chooseColor = function() {
+            if ($scope.topCard.color !== 'black')
+                return;
+            openChooseColorModal();
+        }
+        
     })
     .controller('ChooseColorController', function($scope, $modalInstance) {
         $scope.colors = ['red', 'yellow', 'green', 'blue'];

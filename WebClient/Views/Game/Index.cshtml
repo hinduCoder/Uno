@@ -17,8 +17,7 @@
     </div>
 
     <div id="top-card-wrapper">
-         <card color="{{topCard.color}}" type="{{topCard.type}}" content="{{topCard.content}}">
-        </card>
+         <card color="{{topCard.color}}" type="{{topCard.type}}" content="{{topCard.content}}" ng-click="chooseColor()"></card>
     </div>
     <div class="buttons">
         <button class="btn-draw btn btn-default" ng-disabled="!(isCurrentPlayer && canDraw)" ng-click="draw()">@LocalRes.Draw</button>
