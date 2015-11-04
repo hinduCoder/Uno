@@ -59,6 +59,8 @@ namespace Uno
                 player.AddCards(_uno.DrawCards(7).ToArray());
             }
             _uno.Start();
+            if (DiscardPileTop.Type == CardType.DrawTwo || DiscardPileTop.Type == CardType.Skip)
+                NextPlayer();
         }
         public void Discard(int index)
         {
